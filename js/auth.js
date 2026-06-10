@@ -58,12 +58,17 @@ function signInDemo(name) {
 }
 
 function signOut() {
-  if (supabase && currentUser && currentUser.id && currentUser.id.indexOf('demo_') === -1) {
-    supabase.auth.signOut();
-  }
   localStorage.removeItem('demo_user');
   currentUser = null;
-  window.location.href = '/index.html';
+  if (supabase && supabase.auth) {
+    supabase.auth.signOut().then(function() {
+      window.location.href = '/index.html';
+    }).catch(function() {
+      window.location.href = '/index.html';
+    });
+  } else {
+    window.location.href = '/index.html';
+  }
 }
 
 function updateUIForUser(user) {
