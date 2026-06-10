@@ -1,4 +1,4 @@
-// MundialPibes26 - Ranking / Leaderboard (Supabase compartido)
+// MundialPibes26 - Ranking / Leaderboard
 
 var leaderboardData = [];
 
@@ -18,11 +18,11 @@ function buildLeaderboard() {
   return supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
     .then(function(result) {
       if (result.data) aggregateLeaderboard(result.data);
-      addCurrentUser();
+      mergeCurrentUser();
       sortLeaderboard();
       renderLeaderboard('leaderboardContainer');
     }).catch(function() {
-      addCurrentUser();
+      mergeCurrentUser();
       sortLeaderboard();
       renderLeaderboard('leaderboardContainer');
     });
@@ -33,7 +33,7 @@ function aggregateLeaderboard(predictions) {
 
   for (var i = 0; i < predictions.length; i++) {
     var pred = predictions[i];
-    var name = pred.user_name || 'Jugador';
+    var name = (pred.user_name || 'Jugador').trim();
     if (!byName[name]) {
       byName[name] = {
         name: name,
@@ -44,11 +44,12 @@ function aggregateLeaderboard(predictions) {
       };
     }
 
+    byName[name].totalPredictions++;
+
     var result = getResult(pred.match_id);
     if (result && result.status === 'finished') {
       var pts = calculatePoints(pred, result);
       byName[name].totalPoints += pts;
-      byName[name].totalPredictions++;
       if (pts > 0) byName[name].correctWinners++;
       if (pts === APP_CONFIG.points.exactScore) byName[name].exactScores++;
     }
@@ -60,7 +61,7 @@ function aggregateLeaderboard(predictions) {
   }
 }
 
-function addCurrentUser() {
+function mergeCurrentUser() {
   if (!currentUser) return;
 
   var myPoints = 0;
@@ -79,14 +80,13 @@ function addCurrentUser() {
     }
   }
 
-  var userName = currentUser.user_metadata && currentUser.user_metadata.full_name
+  var userName = (currentUser.user_metadata && currentUser.user_metadata.full_name
     ? currentUser.user_metadata.full_name
-    : 'Tu';
+    : 'Tu').trim();
 
-  // Si ya existe alguien con mi nombre, fusionar puntos
   var found = false;
   for (var k = 0; k < leaderboardData.length; k++) {
-    if (leaderboardData[k].name === userName) {
+    if (leaderboardData[k].name.toLowerCase() === userName.toLowerCase()) {
       leaderboardData[k].totalPoints += myPoints;
       leaderboardData[k].correctWinners += myWinners;
       leaderboardData[k].exactScores += myExacts;
@@ -110,7 +110,12 @@ function addCurrentUser() {
 }
 
 function sortLeaderboard() {
-  leaderboardData.sort(function(a, b) { return b.totalPoints - a.totalPoints; });
+  leaderboardData.sort(function(a, b) {
+    if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+    if (b.exactScores !== a.exactScores) return b.exactScores - a.exactScores;
+    if (b.correctWinners !== a.correctWinners) return b.correctWinners - a.correctWinners;
+    return b.totalPredictions - a.totalPredictions;
+  });
 }
 
 function renderLeaderboard(containerId) {
@@ -168,10 +173,5 @@ function renderLeaderboard(containerId) {
   }
 
   html += '</div>';
-
-  if (leaderboardData.length === 1) {
-    html += '<div class="ranking-demo-note">Tu eres el unico jugador. Invita a otros para competir en el ranking.</div>';
-  }
-
   container.innerHTML = html;
 }
