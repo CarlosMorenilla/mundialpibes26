@@ -10,22 +10,22 @@ function loadLeaderboard() {
 function buildLeaderboard() {
   leaderboardData = [];
 
-  if (supabase && !isDemoUser()) {
-    return supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
-      .then(function(result) {
-        if (result.data) aggregateLeaderboard(result.data);
-        addCurrentUser();
-        sortLeaderboard();
-        renderLeaderboard('leaderboardContainer');
-      }).catch(function() {
-        addCurrentUser();
-        sortLeaderboard();
-        renderLeaderboard('leaderboardContainer');
-      });
+  if (!supabase) {
+    renderLeaderboard('leaderboardContainer');
+    return Promise.resolve();
   }
 
-  addCurrentUser();
-  sortLeaderboard();
+  return supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
+    .then(function(result) {
+      if (result.data) aggregateLeaderboard(result.data);
+      addCurrentUser();
+      sortLeaderboard();
+      renderLeaderboard('leaderboardContainer');
+    }).catch(function() {
+      addCurrentUser();
+      sortLeaderboard();
+      renderLeaderboard('leaderboardContainer');
+    });
 }
 
 function aggregateLeaderboard(predictions) {

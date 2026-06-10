@@ -3,35 +3,22 @@
 var userPredictions = {};
 
 function loadPredictions() {
-  if (!currentUser) return Promise.resolve();
+  if (!currentUser || !supabase) return Promise.resolve();
 
-  if (supabase && !isDemoUser()) {
-    return supabase.from('predictions')
-      .select('*')
-      .eq('user_id', currentUser.id)
-      .then(function(result) {
-        userPredictions = {};
-        if (result.data) {
-          for (var i = 0; i < result.data.length; i++) {
-            var pred = result.data[i];
-            userPredictions[pred.match_id] = pred;
-          }
+  return supabase.from('predictions')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .then(function(result) {
+      userPredictions = {};
+      if (result.data) {
+        for (var i = 0; i < result.data.length; i++) {
+          var pred = result.data[i];
+          userPredictions[pred.match_id] = pred;
         }
-      }).catch(function() {
-        loadPredictionsLocal();
-      });
-  }
-
-  loadPredictionsLocal();
-  return Promise.resolve();
-}
-
-function loadPredictionsLocal() {
-  if (!currentUser) return;
-  var stored = localStorage.getItem('predictions_' + currentUser.id);
-  if (stored) {
-    try { userPredictions = JSON.parse(stored); } catch(e) { userPredictions = {}; }
-  }
+      }
+    }).catch(function() {
+      userPredictions = {};
+    });
 }
 
 function savePrediction(matchId) {
@@ -69,18 +56,13 @@ function savePrediction(matchId) {
 
   userPredictions[matchId] = prediction;
 
-  if (supabase && !isDemoUser()) {
-    supabase.from('predictions').upsert(prediction, {
-      onConflict: 'user_id,match_id'
-    }).then(function() {
-      showToast('Prediccion guardada', 'success');
-    }).catch(function() {
-      showToast('Error guardando en servidor', 'error');
-    });
-  } else {
-    localStorage.setItem('predictions_' + currentUser.id, JSON.stringify(userPredictions));
+  supabase.from('predictions').upsert(prediction, {
+    onConflict: 'user_id,match_id'
+  }).then(function() {
     showToast('Prediccion guardada', 'success');
-  }
+  }).catch(function() {
+    showToast('Error guardando en servidor', 'error');
+  });
 
   renderCurrentSection();
 }

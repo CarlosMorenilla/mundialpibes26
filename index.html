@@ -15,7 +15,7 @@
       <h1 class="login-title">MundialPibes26</h1>
       <p class="login-subtitle">Haz tu prediccion del Mundial</p>
 
-      <button id="googleLoginBtn" class="login-btn" style="display:none; width:100%; max-width:320px; justify-content:center; background:#fff; color:#333;">
+      <button id="googleLoginBtn" class="login-btn" style="width:100%; max-width:320px; justify-content:center; background:#fff; color:#333;">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:22px; height:22px;">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -24,19 +24,6 @@
         </svg>
         Iniciar sesion con Google
       </button>
-
-      <div id="loginDivider" style="display:none; margin:20px 0; color:rgba(255,255,255,0.3); font-size:0.8rem;">o</div>
-
-      <div id="demoLoginBox" style="width:100%; max-width:320px;">
-        <input type="text" id="demoNameInput" placeholder="Tu nombre de usuario"
-          style="width:100%; padding:14px 16px; border:2px solid #d4a843; border-radius:50px;
-          font-size:1rem; background:rgba(255,255,255,0.1); color:#fff; text-align:center;
-          margin-bottom:12px; outline:none; box-sizing:border-box;"
-          maxlength="30">
-        <button id="demoLoginBtn" class="login-btn" style="width:100%; justify-content:center;">
-          Entrar (demo)
-        </button>
-      </div>
 
       <div class="login-footer">
         MundialPibes26 &copy; 2026
@@ -49,38 +36,19 @@
     var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVoaGh4b2lodGZ6bGlyeG9oaGxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMTUyMjcsImV4cCI6MjA5NjY5MTIyN30.s3wbM08PpbGldrlPGvm8b886OcM6rEH_p1VsvH2QuaY';
     var supabaseClient = null;
 
-    function initSupabase() {
-      if (window.supabase && window.supabase.createClient) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-        return true;
-      }
-      return false;
-    }
-
     var script = document.createElement('script');
     script.src = 'https://unpkg.com/@supabase/supabase-js@2';
     script.onload = function() {
-      if (initSupabase()) {
-        document.getElementById('googleLoginBtn').style.display = 'inline-flex';
-        document.getElementById('loginDivider').style.display = 'block';
-        checkSession();
+      if (window.supabase && window.supabase.createClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        supabaseClient.auth.getSession().then(function(result) {
+          if (result.data.session && result.data.session.user) {
+            window.location.href = '/app.html';
+          }
+        }).catch(function() {});
       }
     };
     document.body.appendChild(script);
-
-    function checkSession() {
-      if (!supabaseClient) return;
-      supabaseClient.auth.getSession().then(function(result) {
-        if (result.data.session && result.data.session.user) {
-          window.location.href = '/app.html';
-        }
-      }).catch(function() {});
-
-      var stored = localStorage.getItem('demo_user');
-      if (stored) {
-        window.location.href = '/app.html';
-      }
-    }
 
     document.getElementById('googleLoginBtn').addEventListener('click', function() {
       if (!supabaseClient) return;
@@ -90,26 +58,6 @@
           redirectTo: window.location.origin + '/app.html'
         }
       });
-    });
-
-    document.getElementById('demoLoginBtn').addEventListener('click', function() {
-      var name = document.getElementById('demoNameInput').value.trim();
-      if (!name) {
-        document.getElementById('demoNameInput').style.borderColor = '#e74c3c';
-        document.getElementById('demoNameInput').placeholder = 'Introduce tu nombre';
-        return;
-      }
-      var user = {
-        id: 'demo_' + Date.now(),
-        email: name.toLowerCase().replace(/\s+/g, '') + '@mundialpibes26.demo',
-        user_metadata: { full_name: name, avatar_url: '' }
-      };
-      localStorage.setItem('demo_user', JSON.stringify(user));
-      window.location.href = '/app.html';
-    });
-
-    document.getElementById('demoNameInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') document.getElementById('demoLoginBtn').click();
     });
   </script>
 </body>

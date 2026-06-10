@@ -36,29 +36,8 @@ function initAuth() {
   return checkSession();
 }
 
-function signInWithGoogle() {
-  if (!supabase) return;
-  supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin + '/app.html'
-    }
-  });
-}
-
-function signInDemo(name) {
-  var user = {
-    id: 'demo_' + Date.now(),
-    email: name.toLowerCase().replace(/\s+/g, '') + '@mundialpibes26.demo',
-    user_metadata: { full_name: name, avatar_url: '' }
-  };
-  localStorage.setItem('demo_user', JSON.stringify(user));
-  currentUser = user;
-  return Promise.resolve(user);
-}
-
 function signOut() {
-  localStorage.removeItem('demo_user');
+  localStorage.clear();
   currentUser = null;
   if (supabase && supabase.auth) {
     supabase.auth.signOut().then(function() {
@@ -89,10 +68,6 @@ function updateUIForUser(user) {
       }
     }
   }
-}
-
-function isDemoUser() {
-  return currentUser && currentUser.id && currentUser.id.indexOf('demo_') === 0;
 }
 
 function requireAuth() {

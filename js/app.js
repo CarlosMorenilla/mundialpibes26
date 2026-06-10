@@ -5,21 +5,14 @@ var currentGroupFilter = 'all';
 var allLoaded = false;
 
 function initApp() {
-  // 1. Cargar usuario (Supabase session o demo)
   initAuth().then(function(hasSession) {
     if (!hasSession) {
-      // Fallback a demo
-      var stored = localStorage.getItem('demo_user');
-      if (!stored) {
-        window.location.href = '/index.html';
-        return;
-      }
-      currentUser = JSON.parse(stored);
+      window.location.href = '/index.html';
+      return;
     }
 
     updateUIForUser(currentUser);
 
-    // 2. Cargar datos y renderizar
     loadMatches().then(function() {
       loadPredictions().then(function() {
         renderCurrentSection();
