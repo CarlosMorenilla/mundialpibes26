@@ -1,5 +1,5 @@
-// MundialPibes26 - Testing / Debug utilities
-// Abre la consola (F12) y ejecuta estas funciones
+// MundialPibes26 - Testing utilities
+// Abre consola (F12) y ejecuta estas funciones
 
 function testScoring() {
   console.log('=== TEST DE PUNTUACION ===');
@@ -30,17 +30,39 @@ function testScoring() {
     { match_id: 5, home_score: 1, away_score: 0 }
   ];
 
+  var userName = currentUser.user_metadata && currentUser.user_metadata.full_name
+    ? currentUser.user_metadata.full_name : 'Jugador';
+
+  var rows = [];
   for (var j = 0; j < testPredictions.length; j++) {
     var p = testPredictions[j];
-    matchResults[p.match_id] = matchResults[p.match_id] || {};
-    matchResults[p.match_id].status = 'finished';
-
     userPredictions[p.match_id] = {
       user_id: currentUser.id,
       match_id: p.match_id,
       home_score: p.home_score,
       away_score: p.away_score
     };
+    rows.push({
+      user_id: currentUser.id,
+      user_name: userName,
+      match_id: p.match_id,
+      home_score: p.home_score,
+      away_score: p.away_score
+    });
+  }
+
+  if (supabase) {
+    supabase.from('predictions').upsert(rows, { onConflict: 'user_id,match_id' })
+      .then(function() {
+        console.log('Predicciones de test guardadas en Supabase');
+        renderCurrentSection();
+        buildLeaderboard();
+      }).catch(function(e) {
+        console.log('Error guardando en Supabase:', e);
+      });
+  } else {
+    renderCurrentSection();
+    buildLeaderboard();
   }
 
   var totalPts = 0;
@@ -49,33 +71,37 @@ function testScoring() {
     var pts = calculatePoints(p, result);
     totalPts += pts;
     var match = getMatchById(p.match_id);
-    var label = match ? (match.home + ' vs ' + match.away) : ('Match ' + p.match_id);
+    var label = match ? (match.home + ' vs ' + match.away) : 'Match ' + p.match_id;
     console.log('  ' + label + ': ' + p.home_score + '-' + p.away_score + ' -> ' + result.home_score + '-' + result.away_score + ' = ' + pts + ' pts');
   });
-
   console.log('TOTAL: ' + totalPts + ' puntos');
   console.log('========================');
-
-  renderCurrentSection();
-  buildLeaderboard();
 }
 
 function clearTestData() {
   matchResults = {};
   userPredictions = {};
-  renderCurrentSection();
-  buildLeaderboard();
-  console.log('Datos de prueba eliminados');
+  if (supabase && currentUser) {
+    supabase.from('predictions').delete().eq('user_id', currentUser.id)
+      .then(function() {
+        console.log('Predicciones borradas de Supabase');
+        renderCurrentSection();
+        buildLeaderboard();
+      });
+  } else {
+    renderCurrentSection();
+    buildLeaderboard();
+  }
 }
 
 function showDebugInfo() {
-  console.log('=== DEBUG INFO ===');
+  console.log('=== DEBUG ===');
   console.log('Usuario:', currentUser ? currentUser.email : 'ninguno');
   console.log('Predicciones locales:', Object.keys(userPredictions).length);
   console.log('Resultados:', Object.keys(matchResults).length);
-  console.log('Ranking entradas:', leaderboardData.length);
+  console.log('Ranking:', leaderboardData.length, 'entradas');
   leaderboardData.forEach(function(u) {
     console.log('  ' + u.name + ': ' + u.totalPoints + ' pts, ' + u.totalPredictions + ' pred');
   });
-  console.log('==================');
+  console.log('=============');
 }
