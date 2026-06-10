@@ -54,8 +54,6 @@ function processAPIEvents(events) {
   if (changed) {
     renderCurrentSection();
     buildLeaderboard();
-    sortLeaderboard();
-    renderLeaderboard('leaderboardContainer');
   }
 }
 

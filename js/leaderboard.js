@@ -10,48 +10,52 @@ function loadLeaderboard() {
 function buildLeaderboard() {
   leaderboardData = [];
 
-  if (!supabase) {
+  if (!supabase || !currentUser) {
     renderLeaderboard('leaderboardContainer');
     return Promise.resolve();
   }
 
   return supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
     .then(function(result) {
-      if (result.data) aggregateLeaderboard(result.data);
-      mergeCurrentUser();
-      sortLeaderboard();
+      aggregateFromDB(result.data || []);
       renderLeaderboard('leaderboardContainer');
     }).catch(function() {
-      mergeCurrentUser();
-      sortLeaderboard();
       renderLeaderboard('leaderboardContainer');
     });
 }
 
-function aggregateLeaderboard(predictions) {
+function aggregateFromDB(predictions) {
   var byName = {};
 
   for (var i = 0; i < predictions.length; i++) {
     var pred = predictions[i];
     var name = (pred.user_name || 'Jugador').trim();
-    if (!byName[name]) {
-      byName[name] = {
+    if (!name) continue;
+
+    var key = name.toLowerCase();
+    if (!byName[key]) {
+      byName[key] = {
         name: name,
         totalPoints: 0,
         correctWinners: 0,
         exactScores: 0,
-        totalPredictions: 0
+        totalPredictions: 0,
+        isMe: false
       };
     }
 
-    byName[name].totalPredictions++;
+    byName[key].totalPredictions++;
 
     var result = getResult(pred.match_id);
     if (result && result.status === 'finished') {
       var pts = calculatePoints(pred, result);
-      byName[name].totalPoints += pts;
-      if (pts > 0) byName[name].correctWinners++;
-      if (pts === APP_CONFIG.points.exactScore) byName[name].exactScores++;
+      byName[key].totalPoints += pts;
+      if (pts > 0) byName[key].correctWinners++;
+      if (pts === APP_CONFIG.points.exactScore) byName[key].exactScores++;
+    }
+
+    if (pred.user_id === currentUser.id) {
+      byName[key].isMe = true;
     }
   }
 
@@ -59,57 +63,7 @@ function aggregateLeaderboard(predictions) {
   for (var j = 0; j < keys.length; j++) {
     leaderboardData.push(byName[keys[j]]);
   }
-}
 
-function mergeCurrentUser() {
-  if (!currentUser) return;
-
-  var myPoints = 0;
-  var myWinners = 0;
-  var myExacts = 0;
-  var myPreds = Object.keys(userPredictions);
-
-  for (var j = 0; j < myPreds.length; j++) {
-    var pred = userPredictions[myPreds[j]];
-    var result = getResult(pred.match_id);
-    if (result && result.status === 'finished') {
-      var pts = calculatePoints(pred, result);
-      myPoints += pts;
-      if (pts > 0) myWinners++;
-      if (pts === APP_CONFIG.points.exactScore) myExacts++;
-    }
-  }
-
-  var userName = (currentUser.user_metadata && currentUser.user_metadata.full_name
-    ? currentUser.user_metadata.full_name
-    : 'Tu').trim();
-
-  var found = false;
-  for (var k = 0; k < leaderboardData.length; k++) {
-    if (leaderboardData[k].name.toLowerCase() === userName.toLowerCase()) {
-      leaderboardData[k].totalPoints += myPoints;
-      leaderboardData[k].correctWinners += myWinners;
-      leaderboardData[k].exactScores += myExacts;
-      leaderboardData[k].totalPredictions += myPreds.length;
-      leaderboardData[k].isMe = true;
-      found = true;
-      break;
-    }
-  }
-
-  if (!found) {
-    leaderboardData.push({
-      name: userName,
-      totalPoints: myPoints,
-      correctWinners: myWinners,
-      exactScores: myExacts,
-      totalPredictions: myPreds.length,
-      isMe: true
-    });
-  }
-}
-
-function sortLeaderboard() {
   leaderboardData.sort(function(a, b) {
     if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
     if (b.exactScores !== a.exactScores) return b.exactScores - a.exactScores;
@@ -152,7 +106,7 @@ function renderLeaderboard(containerId) {
     var user = leaderboardData[i];
     var pos = i + 1;
     var posClass = pos <= 3 ? 'top-' + pos : '';
-    var isMe = user.isMe === true;
+    var isMe = user.isMe;
 
     var rowClass = 'leaderboard-row';
     if (isMe) rowClass += ' current-user';
