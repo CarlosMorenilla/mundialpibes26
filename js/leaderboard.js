@@ -29,14 +29,14 @@ function buildLeaderboard() {
 }
 
 function aggregateLeaderboard(predictions) {
-  var users = {};
+  var byName = {};
 
   for (var i = 0; i < predictions.length; i++) {
     var pred = predictions[i];
-    if (!users[pred.user_id]) {
-      users[pred.user_id] = {
-        user_id: pred.user_id,
-        name: pred.user_name || 'Jugador',
+    var name = pred.user_name || 'Jugador';
+    if (!byName[name]) {
+      byName[name] = {
+        name: name,
         totalPoints: 0,
         correctWinners: 0,
         exactScores: 0,
@@ -47,16 +47,16 @@ function aggregateLeaderboard(predictions) {
     var result = getResult(pred.match_id);
     if (result && result.status === 'finished') {
       var pts = calculatePoints(pred, result);
-      users[pred.user_id].totalPoints += pts;
-      users[pred.user_id].totalPredictions++;
-      if (pts > 0) users[pred.user_id].correctWinners++;
-      if (pts === APP_CONFIG.points.exactScore) users[pred.user_id].exactScores++;
+      byName[name].totalPoints += pts;
+      byName[name].totalPredictions++;
+      if (pts > 0) byName[name].correctWinners++;
+      if (pts === APP_CONFIG.points.exactScore) byName[name].exactScores++;
     }
   }
 
-  var keys = Object.keys(users);
+  var keys = Object.keys(byName);
   for (var j = 0; j < keys.length; j++) {
-    leaderboardData.push(users[keys[j]]);
+    leaderboardData.push(byName[keys[j]]);
   }
 }
 
@@ -83,15 +83,30 @@ function addCurrentUser() {
     ? currentUser.user_metadata.full_name
     : 'Tu';
 
-  leaderboardData.push({
-    user_id: currentUser.id,
-    name: userName,
-    totalPoints: myPoints,
-    correctWinners: myWinners,
-    exactScores: myExacts,
-    totalPredictions: myPreds.length,
-    isMe: true
-  });
+  // Si ya existe alguien con mi nombre, fusionar puntos
+  var found = false;
+  for (var k = 0; k < leaderboardData.length; k++) {
+    if (leaderboardData[k].name === userName) {
+      leaderboardData[k].totalPoints += myPoints;
+      leaderboardData[k].correctWinners += myWinners;
+      leaderboardData[k].exactScores += myExacts;
+      leaderboardData[k].totalPredictions += myPreds.length;
+      leaderboardData[k].isMe = true;
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    leaderboardData.push({
+      name: userName,
+      totalPoints: myPoints,
+      correctWinners: myWinners,
+      exactScores: myExacts,
+      totalPredictions: myPreds.length,
+      isMe: true
+    });
+  }
 }
 
 function sortLeaderboard() {
@@ -122,10 +137,10 @@ function renderLeaderboard(containerId) {
   html += '<div class="leaderboard-pos">#</div>';
   html += '<div class="leaderboard-user">Jugador</div>';
   html += '<div class="leaderboard-stats">';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Puntos</div><div class="leaderboard-stat-label">Total</div></div>';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Ganador</div><div class="leaderboard-stat-label">Acerto ganador</div></div>';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Exacto</div><div class="leaderboard-stat-label">Acerto resultado</div></div>';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Pred.</div><div class="leaderboard-stat-label">Hechas</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Pts</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Gan.</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Exc.</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Pred.</div></div>';
   html += '</div></div>';
 
   for (var i = 0; i < leaderboardData.length; i++) {

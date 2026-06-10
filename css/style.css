@@ -627,9 +627,10 @@ body {
   background: var(--primary);
   color: var(--text-white);
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--gold);
 }
 
 .leaderboard-pos {
@@ -667,11 +668,17 @@ body {
 
 .leaderboard-stats {
   display: flex;
-  gap: 16px;
+  gap: 0;
   align-items: center;
 }
 
 .leaderboard-stat {
+  width: 60px;
+  text-align: right;
+  padding: 0 4px;
+}
+
+.leaderboard-row.header .leaderboard-stat {
   text-align: center;
 }
 
