@@ -33,8 +33,9 @@ function aggregateLeaderboard(predictions) {
 
   for (var i = 0; i < predictions.length; i++) {
     var pred = predictions[i];
-    if (!users[pred.user_id]) {
-      users[pred.user_id] = {
+    var key = pred.user_name || pred.user_id;
+    if (!users[key]) {
+      users[key] = {
         user_id: pred.user_id,
         name: pred.user_name || 'Jugador',
         totalPoints: 0,
@@ -47,10 +48,10 @@ function aggregateLeaderboard(predictions) {
     var result = getResult(pred.match_id);
     if (result && result.status === 'finished') {
       var pts = calculatePoints(pred, result);
-      users[pred.user_id].totalPoints += pts;
-      users[pred.user_id].totalPredictions++;
-      if (pts > 0) users[pred.user_id].correctWinners++;
-      if (pts === APP_CONFIG.points.exactScore) users[pred.user_id].exactScores++;
+      users[key].totalPoints += pts;
+      users[key].totalPredictions++;
+      if (pts > 0) users[key].correctWinners++;
+      if (pts === APP_CONFIG.points.exactScore) users[key].exactScores++;
     }
   }
 
