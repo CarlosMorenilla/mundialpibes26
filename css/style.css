@@ -523,6 +523,32 @@ body {
   font-weight: 700;
 }
 
+.prediction-result {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.prediction-result-label {
+  color: var(--text-light);
+}
+
+.prediction-result-score {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.prediction-points-win {
+  background: var(--success);
+  color: white;
+}
+
+.prediction-points-lose {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-light);
+}
+
 .match-venue {
   font-size: 0.7rem;
   color: var(--text-light);

@@ -106,9 +106,19 @@ function renderMatchCard(match, result, prediction) {
       '</div>';
   } else if (finished) {
     var pts = prediction ? calculatePoints(prediction, result) : 0;
+    var ptsLabel = '';
+    if (predicted) {
+      if (pts === APP_CONFIG.points.exactScore) ptsLabel = 'Resultado exacto! +3 pts';
+      else if (pts === APP_CONFIG.points.winner) ptsLabel = 'Acertaste el ganador! +1 pt';
+      else ptsLabel = 'No acertaste';
+    }
     actionsHTML = '<div class="match-actions">' +
       '<div style="text-align:center;color:var(--success);font-weight:600;font-size:0.85rem;">FINALIZADO</div>' +
-      (predicted ? '<div class="prediction-points">+' + pts + ' puntos</div>' : '') +
+      (predicted ? '<div class="prediction-result">' +
+        '<span class="prediction-result-label">Tu prediccion:</span> ' +
+        '<span class="prediction-result-score">' + prediction.home_score + ' - ' + prediction.away_score + '</span>' +
+        '</div>' +
+        '<div class="prediction-points ' + (pts > 0 ? 'prediction-points-win' : 'prediction-points-lose') + '">' + ptsLabel + '</div>' : '') +
       '</div>';
   } else if (!started && !predicted) {
     actionsHTML = '<div class="match-actions">' +

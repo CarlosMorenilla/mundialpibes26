@@ -123,10 +123,10 @@ function renderLeaderboard(containerId) {
   html += '<div class="leaderboard-pos">#</div>';
   html += '<div class="leaderboard-user">Jugador</div>';
   html += '<div class="leaderboard-stats">';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value" title="Puntos totales">Pts</div></div>';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value" title="Veces que acertaste el ganador">Ganador</div></div>';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value" title="Veces que acertaste el resultado exacto">Exacto</div></div>';
-  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value" title="Total de predicciones hechas">Pred.</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Puntos</div><div class="leaderboard-stat-label">Total</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Ganador</div><div class="leaderboard-stat-label">Acerto ganador</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Exacto</div><div class="leaderboard-stat-label">Acerto resultado</div></div>';
+  html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">Pred.</div><div class="leaderboard-stat-label">Hechas</div></div>';
   html += '</div></div>';
 
   for (var i = 0; i < leaderboardData.length; i++) {
