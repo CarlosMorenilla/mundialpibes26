@@ -20,6 +20,7 @@ function fetchScores() {
 }
 
 function processAPIEvents(events) {
+  var changed = false;
   for (var i = 0; i < events.length; i++) {
     var event = events[i];
     var homeCode = findTeamCode(event.strHomeTeam);
@@ -29,17 +30,32 @@ function processAPIEvents(events) {
     var match = findMatchByTeams(homeCode, awayCode);
     if (!match) continue;
 
+    var newStatus = mapStatus(event.strStatus || event.strProgress);
+    var oldResult = matchResults[match.id];
+    var oldStatus = oldResult ? oldResult.status : null;
+
     var result = {
       match_id: match.id,
       home_score: parseInt(event.intHomeScore) || 0,
       away_score: parseInt(event.intAwayScore) || 0,
-      status: mapStatus(event.strStatus || event.strProgress),
+      status: newStatus,
       minute: event.strProgress || null
     };
 
     matchResults[match.id] = result;
-    if (result.status === 'live') { liveMatches[match.id] = result; }
-    else if (result.status === 'finished') { delete liveMatches[match.id]; }
+    if (newStatus === 'live') { liveMatches[match.id] = result; }
+    else if (newStatus === 'finished') { delete liveMatches[match.id]; }
+
+    if (oldStatus !== 'finished' && newStatus === 'finished') {
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    renderCurrentSection();
+    buildLeaderboard();
+    sortLeaderboard();
+    renderLeaderboard('leaderboardContainer');
   }
 }
 
