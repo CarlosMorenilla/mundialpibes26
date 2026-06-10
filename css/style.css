@@ -943,3 +943,134 @@ body {
     font-size: 0.85rem;
   }
 }
+
+/* ============================================
+   PREDICTIONS VIEW
+   ============================================ */
+.predictions-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.predictions-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.predictions-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.predictions-group {
+  margin-bottom: 24px;
+}
+
+.predictions-group-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--gold);
+}
+
+.predictions-match {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.predictions-match-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-light);
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.predictions-match-teams {
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.predictions-match-teams img {
+  width: 22px;
+  vertical-align: middle;
+}
+
+.predictions-match-score {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--primary);
+}
+
+.predictions-match-date {
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+.predictions-match-empty {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  text-align: center;
+  font-style: italic;
+}
+
+.predictions-match-list {
+  padding: 4px 0;
+}
+
+.predictions-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.predictions-user:last-child {
+  border-bottom: none;
+}
+
+.predictions-user-me {
+  background: rgba(232, 98, 28, 0.06);
+}
+
+.predictions-user-name {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.predictions-user-score {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.predictions-correct {
+  color: var(--success);
+}
+
+.predictions-wrong {
+  color: var(--danger);
+}
+
+.predictions-pts {
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}

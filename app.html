@@ -28,6 +28,9 @@
     <button class="nav-tab active" data-section="matches" onclick="switchSection('matches')">
       Partidos
     </button>
+    <button class="nav-tab" data-section="predictions" onclick="switchSection('predictions')">
+      Predicciones
+    </button>
     <button class="nav-tab" data-section="leaderboard" onclick="switchSection('leaderboard')">
       Ranking
     </button>
@@ -45,6 +48,17 @@
         <div class="loading">
           <div class="loading-spinner"></div>
           Cargando partidos...
+        </div>
+      </div>
+    </section>
+
+    <!-- Predictions Section -->
+    <section id="section-predictions" class="section">
+      <h2 class="section-title">Predicciones de todos</h2>
+      <div id="predictionsContainer">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Cargando predicciones...
         </div>
       </div>
     </section>
@@ -92,6 +106,7 @@
   <script src="/js/predictions.js"></script>
   <script src="/js/scores.js"></script>
   <script src="/js/leaderboard.js"></script>
+  <script src="/js/predictions-view.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/test.js"></script>
 
