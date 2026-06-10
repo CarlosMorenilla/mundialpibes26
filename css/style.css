@@ -682,6 +682,10 @@ body {
   text-align: center;
 }
 
+.leaderboard-row.header .leaderboard-stat-value {
+  color: var(--text-white);
+}
+
 .leaderboard-stat-value {
   font-weight: 700;
   font-size: 1rem;
