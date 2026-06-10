@@ -1,10 +1,9 @@
 // MundialPibes26 - Testing / Debug utilities
-// Abre la consola del navegador (F12) y usa estas funciones para probar
+// Abre la consola (F12) y ejecuta estas funciones
 
 function testScoring() {
   console.log('=== TEST DE PUNTUACION ===');
 
-  // Simular resultados de partidos
   var testMatches = [
     { id: 1, home: 'MEX', away: 'RSA', home_score: 2, away_score: 0, status: 'finished' },
     { id: 2, home: 'ESP', away: 'CPV', home_score: 3, away_score: 1, status: 'finished' },
@@ -13,7 +12,6 @@ function testScoring() {
     { id: 5, home: 'GER', away: 'JPN', home_score: 0, away_score: 0, status: 'finished' }
   ];
 
-  // Guardar como "resultados" en localStorage
   for (var i = 0; i < testMatches.length; i++) {
     var m = testMatches[i];
     matchResults[m.id] = {
@@ -24,33 +22,27 @@ function testScoring() {
     };
   }
 
-  console.log('Resultados de prueba injectados:');
-  testMatches.forEach(function(m) {
-    console.log('  ' + m.home + ' ' + m.home_score + ' - ' + m.away_score + ' ' + m.away);
-  });
-
-  // Crear predicciones de prueba para el usuario actual
   var testPredictions = [
-    { match_id: 1, home_score: 2, away_score: 0 },  // Exacto = 3 pts
-    { match_id: 2, home_score: 2, away_score: 1 },  // Ganador = 1 pt
-    { match_id: 3, home_score: 2, away_score: 1 },  // Fallo = 0 pts
-    { match_id: 4, home_score: 2, away_score: 1 },  // Exacto = 3 pts
-    { match_id: 5, home_score: 1, away_score: 0 }   // Fallo = 0 pts
+    { match_id: 1, home_score: 2, away_score: 0 },
+    { match_id: 2, home_score: 2, away_score: 1 },
+    { match_id: 3, home_score: 2, away_score: 1 },
+    { match_id: 4, home_score: 2, away_score: 1 },
+    { match_id: 5, home_score: 1, away_score: 0 }
   ];
 
   for (var j = 0; j < testPredictions.length; j++) {
     var p = testPredictions[j];
+    matchResults[p.match_id] = matchResults[p.match_id] || {};
+    matchResults[p.match_id].status = 'finished';
+
     userPredictions[p.match_id] = {
-      user_id: currentUser ? currentUser.id : 'test',
+      user_id: currentUser.id,
       match_id: p.match_id,
       home_score: p.home_score,
       away_score: p.away_score
     };
   }
 
-  console.log('Predicciones de prueba creadas:');
-
-  // Calcular puntos
   var totalPts = 0;
   testPredictions.forEach(function(p) {
     var result = matchResults[p.match_id];
@@ -61,42 +53,29 @@ function testScoring() {
     console.log('  ' + label + ': ' + p.home_score + '-' + p.away_score + ' -> ' + result.home_score + '-' + result.away_score + ' = ' + pts + ' pts');
   });
 
-  console.log('TOTAL PUNTOS: ' + totalPts);
+  console.log('TOTAL: ' + totalPts + ' puntos');
   console.log('========================');
 
-  // Refrescar vistas
   renderCurrentSection();
   buildLeaderboard();
-  renderLeaderboard('leaderboardContainer');
-
-  return totalPts;
 }
 
 function clearTestData() {
   matchResults = {};
   userPredictions = {};
-  if (currentUser) {
-    localStorage.removeItem('predictions_' + currentUser.id);
-  }
   renderCurrentSection();
   buildLeaderboard();
-  renderLeaderboard('leaderboardContainer');
   console.log('Datos de prueba eliminados');
 }
 
 function showDebugInfo() {
   console.log('=== DEBUG INFO ===');
   console.log('Usuario:', currentUser ? currentUser.email : 'ninguno');
-  console.log('Predicciones guardadas:', Object.keys(userPredictions).length);
-  console.log('Resultados cargados:', Object.keys(matchResults).length);
-  console.log('Partidos totales:', matchesData ? matchesData.matches.length : 0);
-
-  Object.keys(userPredictions).forEach(function(id) {
-    var pred = userPredictions[id];
-    var result = matchResults[id];
-    var pts = result ? calculatePoints(pred, result) : 'sin resultado';
-    console.log('  Match ' + id + ': pred=' + pred.home_score + '-' + pred.away_score + (result ? ' res=' + result.home_score + '-' + result.away_score : '') + ' pts=' + pts);
+  console.log('Predicciones locales:', Object.keys(userPredictions).length);
+  console.log('Resultados:', Object.keys(matchResults).length);
+  console.log('Ranking entradas:', leaderboardData.length);
+  leaderboardData.forEach(function(u) {
+    console.log('  ' + u.name + ': ' + u.totalPoints + ' pts, ' + u.totalPredictions + ' pred');
   });
-
   console.log('==================');
 }

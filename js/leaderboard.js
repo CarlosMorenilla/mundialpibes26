@@ -1,25 +1,30 @@
 // MundialPibes26 - Ranking / Leaderboard
 
 var leaderboardData = [];
+var leaderboardLoading = false;
 
 function loadLeaderboard() {
   buildLeaderboard();
-  return Promise.resolve();
 }
 
 function buildLeaderboard() {
+  if (leaderboardLoading) return;
+  leaderboardLoading = true;
   leaderboardData = [];
 
   if (!supabase || !currentUser) {
+    leaderboardLoading = false;
     renderLeaderboard('leaderboardContainer');
-    return Promise.resolve();
+    return;
   }
 
-  return supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
+  supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
     .then(function(result) {
       aggregateFromDB(result.data || []);
+      leaderboardLoading = false;
       renderLeaderboard('leaderboardContainer');
     }).catch(function() {
+      leaderboardLoading = false;
       renderLeaderboard('leaderboardContainer');
     });
 }
