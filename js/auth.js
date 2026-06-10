@@ -1,0 +1,99 @@
+// MundialPibes26 - Autenticacion con Supabase + Google
+
+var currentUser = null;
+
+function initAuth() {
+  if (!supabase) return Promise.resolve(false);
+
+  var hasHashTokens = window.location.hash && window.location.hash.indexOf('access_token') !== -1;
+
+  var checkSession = function() {
+    return supabase.auth.getSession().then(function(result) {
+      if (result.data.session && result.data.session.user) {
+        currentUser = result.data.session.user;
+        return true;
+      }
+      return false;
+    }).catch(function() {
+      return false;
+    });
+  };
+
+  if (hasHashTokens) {
+    return new Promise(function(resolve) {
+      setTimeout(function() {
+        checkSession().then(function(ok) {
+          if (ok) {
+            window.location.hash = '';
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+          resolve(ok);
+        });
+      }, 1500);
+    });
+  }
+
+  return checkSession();
+}
+
+function signInWithGoogle() {
+  if (!supabase) return;
+  supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + '/app.html'
+    }
+  });
+}
+
+function signInDemo(name) {
+  var user = {
+    id: 'demo_' + Date.now(),
+    email: name.toLowerCase().replace(/\s+/g, '') + '@mundialpibes26.demo',
+    user_metadata: { full_name: name, avatar_url: '' }
+  };
+  localStorage.setItem('demo_user', JSON.stringify(user));
+  currentUser = user;
+  return Promise.resolve(user);
+}
+
+function signOut() {
+  if (supabase && currentUser && currentUser.id && currentUser.id.indexOf('demo_') === -1) {
+    supabase.auth.signOut();
+  }
+  localStorage.removeItem('demo_user');
+  currentUser = null;
+  window.location.href = '/index.html';
+}
+
+function updateUIForUser(user) {
+  var avatarEl = document.getElementById('userAvatar');
+  var nameEl = document.getElementById('userName');
+
+  if (user && nameEl) {
+    var name = user.user_metadata && user.user_metadata.full_name
+      ? user.user_metadata.full_name
+      : (user.email || 'Jugador');
+    nameEl.textContent = name;
+
+    if (avatarEl) {
+      var photo = user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture);
+      if (photo) {
+        avatarEl.src = photo;
+        avatarEl.style.display = 'block';
+      }
+    }
+  }
+}
+
+function isDemoUser() {
+  return currentUser && currentUser.id && currentUser.id.indexOf('demo_') === 0;
+}
+
+function requireAuth() {
+  if (!currentUser) {
+    window.location.href = '/index.html';
+    return false;
+  }
+  return true;
+}
