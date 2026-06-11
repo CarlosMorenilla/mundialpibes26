@@ -34,7 +34,7 @@ function getMatchesByStage(stage) {
 }
 
 function getMatchDate(match) {
-  return new Date(match.date + 'T' + match.time + ':00+02:00');
+  return new Date(match.date + 'T' + match.time + ':00+01:00');
 }
 
 function formatMatchDate(match) {

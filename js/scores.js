@@ -6,16 +6,23 @@ var scoresInterval = null;
 
 function fetchScores() {
   var today = new Date().toISOString().split('T')[0];
-  fetch(THESPORTSDB_API + '/eventsday.php?d=' + today + '&l=' + THESPORTSDB_LEAGUE_ID)
+  var url = THESPORTSDB_API + '/eventsday.php?d=' + today + '&l=' + THESPORTSDB_LEAGUE_ID;
+  console.log('[Scores] Fetching:', url);
+  fetch(url)
     .then(function(response) {
-      if (!response.ok) throw new Error('API no disponible');
+      if (!response.ok) throw new Error('API status ' + response.status);
       return response.json();
     })
     .then(function(data) {
-      if (data && data.events) processAPIEvents(data.events);
+      if (data && data.events) {
+        console.log('[Scores] Found', data.events.length, 'events');
+        processAPIEvents(data.events);
+      } else {
+        console.log('[Scores] No events found');
+      }
     })
-    .catch(function() {
-      // Silenciar errores de API - el Mundial aun no empieza
+    .catch(function(e) {
+      console.log('[Scores] Error:', e.message);
     });
 }
 
@@ -25,10 +32,16 @@ function processAPIEvents(events) {
     var event = events[i];
     var homeCode = findTeamCode(event.strHomeTeam);
     var awayCode = findTeamCode(event.strAwayTeam);
-    if (!homeCode || !awayCode) continue;
+    if (!homeCode || !awayCode) {
+      console.log('[Scores] Could not map teams:', event.strHomeTeam, '->', homeCode, '|', event.strAwayTeam, '->', awayCode);
+      continue;
+    }
 
     var match = findMatchByTeams(homeCode, awayCode);
-    if (!match) continue;
+    if (!match) {
+      console.log('[Scores] No match found for', homeCode, 'vs', awayCode);
+      continue;
+    }
 
     var newStatus = mapStatus(event.strStatus || event.strProgress);
     var oldResult = matchResults[match.id];
@@ -46,12 +59,15 @@ function processAPIEvents(events) {
     if (newStatus === 'live') { liveMatches[match.id] = result; }
     else if (newStatus === 'finished') { delete liveMatches[match.id]; }
 
+    console.log('[Scores] Match', match.id, homeCode, 'vs', awayCode, ':', result.home_score, '-', result.away_score, '(' + newStatus + ')');
+
     if (oldStatus !== 'finished' && newStatus === 'finished') {
       changed = true;
     }
   }
 
   if (changed) {
+    console.log('[Scores] Match finished, refreshing...');
     renderCurrentSection();
     buildLeaderboard();
   }
