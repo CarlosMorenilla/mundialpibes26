@@ -9,7 +9,7 @@ if (typeof window !== 'undefined' && window.supabase && window.supabase.createCl
   supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 }
 
-var THESPORTSDB_API = 'https://www.thesportsdb.com/api/v2/json/40133177';
+var THESPORTSDB_API = 'https://www.thesportsdb.com/api/v1/json/3';
 var THESPORTSDB_LEAGUE_ID = '4429';
 
 var APP_CONFIG = {
