@@ -6,6 +6,19 @@ var currentGroupFilter = 'all';
 var allLoaded = false;
 
 function initApp() {
+  var isTest = window.location.search.indexOf('test') !== -1;
+
+  if (isTest) {
+    currentUser = { id: 'test-user', user_metadata: { full_name: 'Test User' }, email: 'test@test.com' };
+    loadMatches().then(function() {
+      loadSavedResults();
+      renderCurrentSection();
+      startScorePolling();
+      allLoaded = true;
+    });
+    return;
+  }
+
   initAuth().then(function(hasSession) {
     if (!hasSession) {
       window.location.href = '/index.html';
