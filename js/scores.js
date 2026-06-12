@@ -70,6 +70,10 @@ function processAPIEvents(events) {
     }
 
     var newStatus = mapStatus(event.strStatus || event.strProgress);
+    if (newStatus !== 'live' && newStatus !== 'finished') {
+      continue;
+    }
+
     var oldResult = matchResults[match.id];
     var oldStatus = oldResult ? oldResult.status : null;
 
