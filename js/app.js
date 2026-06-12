@@ -180,50 +180,6 @@ function filterGroup(group) {
   renderMatches();
 }
 
-function renderCalendar() {
-  var container = document.getElementById('calendarContainer');
-  if (!container || !matchesData) return;
-
-  var html = '';
-  var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-
-  for (var gi = 0; gi < groups.length; gi++) {
-    var g = groups[gi];
-    var groupTeams = matchesData.groups[g];
-    var groupMatches = getGroupMatches(g);
-
-    html += '<div class="calendar-group">';
-    html += '<div class="group-header">';
-    html += '<div class="group-letter">' + g + '</div>';
-    html += '<div class="group-teams-flags">';
-    for (var ti = 0; ti < groupTeams.length; ti++) {
-      html += '<span title="' + getTeamName(groupTeams[ti]) + '">' + getFlagImg(groupTeams[ti], 28) + '</span>';
-    }
-    html += '</div></div>';
-    html += '<div class="group-matches">';
-
-    for (var mi = 0; mi < groupMatches.length; mi++) {
-      var match = groupMatches[mi];
-      var result = getResult(match.id);
-      var display = getMatchDisplay(match, result);
-      var scoreHome = result ? result.home_score : '-';
-      var scoreAway = result ? result.away_score : '-';
-
-      html += '<div class="match-card" style="margin:0;border:none;border-bottom:1px solid var(--border);border-radius:0;">';
-      html += '<div class="match-info"><span>' + formatMatchDate(match) + '</span><span>' + formatMatchTime(match) + '</span></div>';
-      html += '<div class="match-teams">';
-      html += '<div class="team" style="flex-direction:row;gap:8px;justify-content:flex-start;">' + display.homeFlag + '<span class="team-name" style="text-align:left;">' + display.homeName + '</span></div>';
-      html += '<div class="match-score" style="min-width:60px;"><span>' + scoreHome + '</span><span style="font-size:0.7rem;color:var(--text-light);">:</span><span>' + scoreAway + '</span></div>';
-      html += '<div class="team" style="flex-direction:row;gap:8px;justify-content:flex-end;"><span class="team-name" style="text-align:right;">' + display.awayName + '</span>' + display.awayFlag + '</div>';
-      html += '</div></div>';
-    }
-
-    html += '</div></div>';
-  }
-
-  container.innerHTML = html;
-}
-
 function showToast(message, type) {
   var container = document.querySelector('.toast-container');
   if (!container) {
