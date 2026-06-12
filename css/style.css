@@ -39,7 +39,7 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background: var(--bg-light);
   color: var(--text);
   line-height: 1.6;
@@ -173,6 +173,8 @@ body {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-white);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .header-user {
@@ -240,6 +242,8 @@ body {
   transition: all 0.2s;
   position: relative;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .nav-tab.active {
@@ -285,6 +289,8 @@ body {
   font-weight: 700;
   margin-bottom: 16px;
   color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* ============================================
@@ -411,6 +417,7 @@ body {
   color: var(--primary);
   min-width: 80px;
   justify-content: center;
+  font-family: 'Oswald', monospace;
 }
 
 .match-score span {
@@ -731,6 +738,7 @@ body {
   font-weight: 700;
   font-size: 1rem;
   color: var(--primary);
+  font-family: 'Oswald', sans-serif;
 }
 
 .leaderboard-stat-label {
@@ -1150,4 +1158,178 @@ body {
   font-weight: 400;
   font-size: 0.75rem;
   color: var(--text-light);
+}
+
+/* ============================================
+   STANDINGS
+   ============================================ */
+.standing-group {
+  margin-bottom: 20px;
+}
+
+.standing-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--primary);
+  color: var(--text-white);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.standing-group-letter {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.standing-group-flags {
+  display: flex;
+  gap: 4px;
+}
+
+.standing-group-flags img {
+  width: 20px;
+  border-radius: 2px;
+}
+
+.standing-table {
+  background: var(--bg-card);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-top: none;
+}
+
+.standing-row {
+  display: flex;
+  align-items: center;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem;
+}
+
+.standing-row:last-child {
+  border-bottom: none;
+}
+
+.standing-row.standing-header {
+  background: var(--bg-light);
+  font-weight: 700;
+  color: var(--text-light);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  padding: 5px 10px;
+}
+
+.standing-row.standing-qualified {
+  background: rgba(46, 204, 113, 0.08);
+  border-left: 3px solid var(--success);
+}
+
+.standing-col {
+  text-align: center;
+}
+
+.standing-pos {
+  width: 24px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.standing-qualified .standing-pos {
+  color: var(--success);
+}
+
+.standing-team {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+  min-width: 0;
+}
+
+.standing-team img {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.standing-team span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.standing-stat {
+  width: 28px;
+  color: var(--text);
+  font-family: 'Oswald', sans-serif;
+}
+
+.standing-dg {
+  color: var(--text-light);
+}
+
+.standing-pts {
+  width: 32px;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   SECTION ANIMATIONS
+   ============================================ */
+.section {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+
+.section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.match-card {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.leaderboard-row {
+  animation: fadeInRow 0.25s ease;
+}
+
+@keyframes fadeInRow {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

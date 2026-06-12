@@ -68,10 +68,10 @@ function renderCurrentSection() {
     renderMatches();
   } else if (currentSection === 'predictions') {
     renderPredictionsView();
+  } else if (currentSection === 'standings') {
+    renderStandings();
   } else if (currentSection === 'leaderboard') {
     renderLeaderboard('leaderboardContainer');
-  } else if (currentSection === 'calendar') {
-    renderCalendar();
   }
 }
 
