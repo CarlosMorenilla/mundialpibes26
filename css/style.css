@@ -291,13 +291,16 @@ body {
    MATCH CARDS
    ============================================ */
 .day-header {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-light);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 20px 0 10px;
-  padding-left: 4px;
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 .match-card {
@@ -329,7 +332,8 @@ body {
 }
 
 .match-card.finished {
-  opacity: 0.85;
+  opacity: 0.9;
+  background: #f9f9f9;
 }
 
 .match-info {
@@ -557,11 +561,48 @@ body {
 }
 
 /* ============================================
-   GROUP FILTER
+   STAGE + GROUP FILTERS
    ============================================ */
-.group-filter {
+.stage-filter {
   display: flex;
   gap: 6px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.stage-filter::-webkit-scrollbar {
+  display: none;
+}
+
+.stage-filter-btn {
+  padding: 7px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.stage-filter-btn.active {
+  background: var(--gradient-gold);
+  color: var(--text-white);
+  border-color: var(--gold);
+  box-shadow: 0 2px 10px rgba(212,168,67,0.3);
+}
+
+.stage-filter-btn:hover:not(.active) {
+  border-color: var(--gold);
+}
+
+.group-filter {
+  display: flex;
+  gap: 5px;
   overflow-x: auto;
   padding: 4px 0 12px;
   -webkit-overflow-scrolling: touch;
@@ -573,12 +614,12 @@ body {
 }
 
 .group-filter-btn {
-  padding: 6px 14px;
+  padding: 5px 12px;
   border: 2px solid var(--border);
   border-radius: var(--radius-full);
   background: var(--bg-card);
   color: var(--text);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -915,6 +956,16 @@ body {
   .match-score span {
     width: 24px;
     height: 30px;
+  }
+
+  .stage-filter-btn {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+
+  .group-filter-btn {
+    padding: 4px 8px;
+    font-size: 0.65rem;
   }
 
   .leaderboard-stats {

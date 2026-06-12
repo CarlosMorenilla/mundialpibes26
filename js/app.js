@@ -1,6 +1,7 @@
 // MundialPibes26 - App principal
 
 var currentSection = 'matches';
+var currentStageFilter = 'all';
 var currentGroupFilter = 'all';
 var allLoaded = false;
 
@@ -67,13 +68,21 @@ function renderMatches() {
 
   var matches = matchesData.matches;
 
-  // Filtrado
+  // Filtro por stage
+  if (currentStageFilter !== 'all') {
+    matches = matches.filter(function(m) { return m.stage === currentStageFilter; });
+  }
+
+  // Filtro por grupo (solo aplica si stage es group o all)
   if (currentGroupFilter !== 'all') {
-    if (currentGroupFilter === 'knockout') {
-      matches = matches.filter(function(m) { return m.stage !== 'group'; });
-    } else {
-      matches = matches.filter(function(m) { return m.group === currentGroupFilter || m.stage !== 'group'; });
+    if (currentStageFilter === 'all' || currentStageFilter === 'group') {
+      matches = matches.filter(function(m) { return m.group === currentGroupFilter; });
     }
+  }
+
+  // Filtro eliminacion rapida
+  if (currentStageFilter === 'all' && currentGroupFilter === 'knockout') {
+    matches = matchesData.matches.filter(function(m) { return m.stage !== 'group'; });
   }
 
   // Agrupar por fecha
@@ -86,20 +95,46 @@ function renderMatches() {
 
   var html = '';
 
-  // Botones de filtro
-  html += '<div class="group-filter">';
-  html += '<button class="group-filter-btn ' + (currentGroupFilter === 'all' ? 'active' : '') + '" onclick="filterGroup(\'all\')">Todos</button>';
-
-  var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-  groups.forEach(function(g) {
-    html += '<button class="group-filter-btn ' + (currentGroupFilter === g ? 'active' : '') + '" onclick="filterGroup(\'' + g + '\')">Grupo ' + g + '</button>';
-  });
-
-  html += '<button class="group-filter-btn ' + (currentGroupFilter === 'knockout' ? 'active' : '') + '" onclick="filterGroup(\'knockout\')">Eliminacion</button>';
+  // Filtro de fase
+  html += '<div class="stage-filter">';
+  var stages = [
+    { key: 'all', label: 'Todos' },
+    { key: 'group', label: 'Grupos' },
+    { key: 'r32', label: 'R32' },
+    { key: 'r16', label: 'Octavos' },
+    { key: 'qf', label: 'Cuartos' },
+    { key: 'sf', label: 'Semi' },
+    { key: 'final', label: 'Final' }
+  ];
+  for (var si = 0; si < stages.length; si++) {
+    var s = stages[si];
+    html += '<button class="stage-filter-btn ' + (currentStageFilter === s.key ? 'active' : '') + '" onclick="filterStage(\'' + s.key + '\')">' + s.label + '</button>';
+  }
   html += '</div>';
+
+  // Filtro de grupo (solo visible cuando stage es group o all)
+  if (currentStageFilter === 'group' || currentStageFilter === 'all') {
+    html += '<div class="group-filter">';
+    html += '<button class="group-filter-btn ' + (currentGroupFilter === 'all' ? 'active' : '') + '" onclick="filterGroup(\'all\')">Todos</button>';
+
+    var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+    groups.forEach(function(g) {
+      html += '<button class="group-filter-btn ' + (currentGroupFilter === g ? 'active' : '') + '" onclick="filterGroup(\'' + g + '\')">' + g + '</button>';
+    });
+
+    if (currentStageFilter === 'all') {
+      html += '<button class="group-filter-btn ' + (currentGroupFilter === 'knockout' ? 'active' : '') + '" onclick="filterGroup(\'knockout\')">Elim.</button>';
+    }
+
+    html += '</div>';
+  }
 
   // Renderizar partidos por fecha
   var sortedDates = Object.keys(grouped).sort();
+
+  if (sortedDates.length === 0) {
+    html += '<div class="empty-state"><div class="empty-state-icon">⚽</div><div class="empty-state-text">No hay partidos en esta vista</div></div>';
+  }
 
   sortedDates.forEach(function(date) {
     var dateObj = new Date(date + 'T12:00:00+01:00');
@@ -113,15 +148,22 @@ function renderMatches() {
     });
   });
 
-  if (matches.length === 0) {
-    html = '<div class="empty-state"><div class="empty-state-icon">⚽</div><div class="empty-state-text">No hay partidos en esta vista</div></div>';
-  }
-
   container.innerHTML = html;
+}
+
+function filterStage(stage) {
+  currentStageFilter = stage;
+  if (stage !== 'group' && stage !== 'all') {
+    currentGroupFilter = 'all';
+  }
+  renderMatches();
 }
 
 function filterGroup(group) {
   currentGroupFilter = group;
+  if (group === 'knockout') {
+    currentStageFilter = 'all';
+  }
   renderMatches();
 }
 
