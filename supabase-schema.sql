@@ -57,3 +57,39 @@ CREATE TRIGGER predictions_updated_at
   BEFORE UPDATE ON predictions
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
+
+-- Tabla de maximo goleador
+CREATE TABLE IF NOT EXISTS top_scorer_predictions (
+  id BIGSERIAL PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  player_name TEXT NOT NULL,
+  player_id TEXT,
+  team_code TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_topscorer_user_id ON top_scorer_predictions(user_id);
+
+ALTER TABLE top_scorer_predictions ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone can read top scorer" ON top_scorer_predictions;
+DROP POLICY IF EXISTS "Users can insert own top scorer" ON top_scorer_predictions;
+DROP POLICY IF EXISTS "Users can update own top scorer" ON top_scorer_predictions;
+DROP POLICY IF EXISTS "Users can delete own top scorer" ON top_scorer_predictions;
+
+CREATE POLICY "Anyone can read top scorer"
+  ON top_scorer_predictions FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can insert own top scorer"
+  ON top_scorer_predictions FOR INSERT
+  WITH CHECK (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can update own top scorer"
+  ON top_scorer_predictions FOR UPDATE
+  USING (auth.uid()::text = user_id);
+
+CREATE POLICY "Users can delete own top scorer"
+  ON top_scorer_predictions FOR DELETE
+  USING (auth.uid()::text = user_id);

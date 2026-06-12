@@ -33,6 +33,8 @@ function initApp() {
         renderCurrentSection();
         startScorePolling();
         loadLeaderboard();
+        loadMyTopScorer();
+        loadAllPlayers();
         allLoaded = true;
       });
     });
@@ -66,10 +68,12 @@ function switchSection(section) {
 function renderCurrentSection() {
   if (currentSection === 'matches') {
     renderMatches();
-  } else if (currentSection === 'predictions') {
-    renderPredictionsView();
+  } else if (currentSection === 'bracket') {
+    renderBracket();
   } else if (currentSection === 'standings') {
     renderStandings();
+  } else if (currentSection === 'topscorer') {
+    renderTopScorer();
   } else if (currentSection === 'leaderboard') {
     renderLeaderboard('leaderboardContainer');
   }

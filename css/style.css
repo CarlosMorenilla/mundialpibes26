@@ -1333,3 +1333,357 @@ body {
     transform: translateX(0);
   }
 }
+
+/* ============================================
+   BRACKET (Cuadro de eliminatorias)
+   ============================================ */
+.bracket-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
+}
+
+.bracket-grid {
+  display: flex;
+  gap: 0;
+  min-width: 900px;
+}
+
+.bracket-round {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bracket-round-title {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 4px 10px;
+}
+
+.bracket-matches {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.bracket-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.bracket-team-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  transition: background 0.2s;
+}
+
+.bracket-team-row:last-child {
+  border-bottom: none;
+}
+
+.bracket-team-row.bracket-winner {
+  background: rgba(46, 204, 113, 0.1);
+  font-weight: 700;
+}
+
+.bracket-flag img {
+  width: 20px;
+  height: 14px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.bracket-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.bracket-score-val {
+  font-weight: 700;
+  font-family: 'Oswald', monospace;
+  font-size: 0.8rem;
+  color: var(--primary);
+  min-width: 16px;
+  text-align: center;
+}
+
+.bracket-third {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.bracket-third-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.bracket-node-third {
+  display: inline-block;
+  min-width: 200px;
+}
+
+/* ============================================
+   TOP SCORER
+   ============================================ */
+.topscorer-current {
+  margin-bottom: 20px;
+}
+
+.topscorer-current-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.topscorer-current-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 2px 12px rgba(212,168,67,0.15);
+}
+
+.topscorer-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+}
+
+.topscorer-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-gold);
+  color: white;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.topscorer-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.topscorer-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--primary);
+}
+
+.topscorer-meta {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topscorer-meta img {
+  width: 16px;
+}
+
+.topscorer-search {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.topscorer-search input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-family: 'Oswald', sans-serif;
+  background: var(--bg-card);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.topscorer-search input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.topscorer-results {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: var(--shadow-lg);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.topscorer-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+
+.topscorer-result-item:last-child {
+  border-bottom: none;
+}
+
+.topscorer-result-item:hover {
+  background: rgba(212,168,67,0.08);
+}
+
+.topscorer-result-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.topscorer-result-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-gold);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.topscorer-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.topscorer-result-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.topscorer-result-meta {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topscorer-result-meta img {
+  width: 14px;
+}
+
+.topscorer-result-empty {
+  padding: 12px 14px;
+  color: var(--text-light);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.topscorer-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.topscorer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.topscorer-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.topscorer-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.topscorer-card-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 8px;
+}
+
+.topscorer-card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-gold);
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.topscorer-card-name {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.topscorer-card-meta {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.topscorer-card-meta img {
+  width: 14px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.75rem;
+}

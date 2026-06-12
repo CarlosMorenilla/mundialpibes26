@@ -31,11 +31,14 @@
     <button class="nav-tab active" data-section="matches" onclick="switchSection('matches')">
       Partidos
     </button>
-    <button class="nav-tab" data-section="predictions" onclick="switchSection('predictions')">
-      Predicciones
+    <button class="nav-tab" data-section="bracket" onclick="switchSection('bracket')">
+      Cuadro
     </button>
     <button class="nav-tab" data-section="standings" onclick="switchSection('standings')">
-      Clasificacion
+      Clasif.
+    </button>
+    <button class="nav-tab" data-section="topscorer" onclick="switchSection('topscorer')">
+      Goleador
     </button>
     <button class="nav-tab" data-section="leaderboard" onclick="switchSection('leaderboard')">
       Ranking
@@ -88,6 +91,28 @@
       </div>
     </section>
 
+    <!-- Bracket Section -->
+    <section id="section-bracket" class="section">
+      <h2 class="section-title">Cuadro de Eliminatorias</h2>
+      <div id="bracketContainer">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Cargando cuadro...
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Scorer Section -->
+    <section id="section-topscorer" class="section">
+      <h2 class="section-title">Maximo Goleador</h2>
+      <div id="topscorerContainer">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Cargando jugadores...
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Toast Container -->
@@ -99,7 +124,7 @@
     var supabase = null;
     var THESPORTSDB_API = 'https://www.thesportsdb.com/api/v1/json/3';
     var THESPORTSDB_LEAGUE_ID = '4429';
-    var APP_CONFIG = { name:'MundialPibes26', tournamentStart:'2026-06-11T19:00:00-06:00', tournamentEnd:'2026-07-19T17:00:00-04:00', points:{ winner:1, exactScore:3 }, refreshInterval:60000, liveRefreshInterval:30000 };
+    var APP_CONFIG = { name:'MundialPibes26', tournamentStart:'2026-06-11T19:00:00-06:00', tournamentEnd:'2026-07-19T17:00:00-04:00', points:{ winner:1, exactScore:3, topScorer:5 }, refreshInterval:60000, liveRefreshInterval:30000 };
   </script>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -111,6 +136,8 @@
   <script src="/js/leaderboard.js"></script>
   <script src="/js/predictions-view.js"></script>
   <script src="/js/standings.js"></script>
+  <script src="/js/bracket.js"></script>
+  <script src="/js/topscorer.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/test.js"></script>
 
