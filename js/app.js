@@ -14,6 +14,7 @@ function initApp() {
     updateUIForUser(currentUser);
 
     loadMatches().then(function() {
+      loadSavedResults();
       loadPredictions().then(function() {
         renderCurrentSection();
         startScorePolling();

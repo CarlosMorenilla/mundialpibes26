@@ -4,26 +4,52 @@ var matchResults = {};
 var liveMatches = {};
 var scoresInterval = null;
 
+function loadSavedResults() {
+  try {
+    var saved = localStorage.getItem('mundialpibes26_results');
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      var keys = Object.keys(parsed);
+      for (var i = 0; i < keys.length; i++) {
+        matchResults[keys[i]] = parsed[keys[i]];
+      }
+      console.log('[Scores] Loaded', keys.length, 'saved results from localStorage');
+    }
+  } catch(e) {}
+}
+
+function saveResults() {
+  try {
+    localStorage.setItem('mundialpibes26_results', JSON.stringify(matchResults));
+  } catch(e) {}
+}
+
 function fetchScores() {
   var today = new Date().toISOString().split('T')[0];
-  var url = THESPORTSDB_API + '/eventsday.php?d=' + today + '&l=' + THESPORTSDB_LEAGUE_ID;
-  console.log('[Scores] Fetching:', url);
-  fetch(url)
-    .then(function(response) {
-      if (!response.ok) throw new Error('API status ' + response.status);
-      return response.json();
-    })
-    .then(function(data) {
-      if (data && data.events) {
-        console.log('[Scores] Found', data.events.length, 'events');
-        processAPIEvents(data.events);
-      } else {
-        console.log('[Scores] No events found');
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  var yesterdayStr = yesterday.toISOString().split('T')[0];
+
+  var urls = [
+    THESPORTSDB_API + '/eventsday.php?d=' + today + '&l=' + THESPORTSDB_LEAGUE_ID,
+    THESPORTSDB_API + '/eventsday.php?d=' + yesterdayStr + '&l=' + THESPORTSDB_LEAGUE_ID
+  ];
+
+  console.log('[Scores] Fetching today + yesterday');
+  Promise.all(urls.map(function(url) {
+    return fetch(url).then(function(r) { return r.ok ? r.json() : {events:null}; }).catch(function() { return {events:null}; });
+  })).then(function(results) {
+    var allEvents = [];
+    for (var i = 0; i < results.length; i++) {
+      if (results[i] && results[i].events) {
+        allEvents = allEvents.concat(results[i].events);
       }
-    })
-    .catch(function(e) {
-      console.log('[Scores] Error:', e.message);
-    });
+    }
+    console.log('[Scores] Found', allEvents.length, 'total events');
+    if (allEvents.length > 0) {
+      processAPIEvents(allEvents);
+    }
+  });
 }
 
 function processAPIEvents(events) {
@@ -68,6 +94,7 @@ function processAPIEvents(events) {
 
   if (changed) {
     console.log('[Scores] Match finished, refreshing...');
+    saveResults();
     renderCurrentSection();
     buildLeaderboard();
   }
