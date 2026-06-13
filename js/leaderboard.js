@@ -20,7 +20,7 @@ function buildLeaderboard() {
 
   Promise.all([
     supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score'),
-    supabase.from('top_scorer_predictions').select('user_id, user_name, player_name')
+    supabase.from('top_scorer_predictions').select('user_id, player_name')
   ]).then(function(results) {
     var predictions = results[0].data || [];
     var topScorerPreds = results[1].data || [];
@@ -45,6 +45,7 @@ function getRealTopScorer() {
 
 function aggregateFromDB(predictions, topScorerPreds) {
   var byName = {};
+  var idToKey = {};
   var realTopScorer = getRealTopScorer();
 
   for (var i = 0; i < predictions.length; i++) {
@@ -68,6 +69,8 @@ function aggregateFromDB(predictions, topScorerPreds) {
 
     byName[key].totalPredictions++;
 
+    if (pred.user_id) idToKey[pred.user_id] = key;
+
     var result = getResult(pred.match_id);
     if (result && result.status === 'finished') {
       var pts = calculatePoints(pred, result);
@@ -84,19 +87,18 @@ function aggregateFromDB(predictions, topScorerPreds) {
   // Process top scorer predictions
   for (var j = 0; j < topScorerPreds.length; j++) {
     var tsp = topScorerPreds[j];
-    var tname = (tsp.user_name || '').trim().toLowerCase();
-    if (!tname || !byName[tname]) continue;
+    var foundKey = idToKey[tsp.user_id];
+    if (!foundKey || !byName[foundKey]) continue;
 
-    byName[tname].topScorerName = tsp.player_name;
+    byName[foundKey].topScorerName = tsp.player_name;
 
-    // Check if the final has been played and this player is the top scorer
     var finalMatch = getMatchByStage('final');
     if (finalMatch) {
       var finalResult = getResult(finalMatch.id);
       if (finalResult && finalResult.status === 'finished' && realTopScorer) {
         if (tsp.player_name.toLowerCase() === realTopScorer.name.toLowerCase()) {
-          byName[tname].topScorerPoints = APP_CONFIG.points.topScorer;
-          byName[tname].totalPoints += APP_CONFIG.points.topScorer;
+          byName[foundKey].topScorerPoints = APP_CONFIG.points.topScorer;
+          byName[foundKey].totalPoints += APP_CONFIG.points.topScorer;
         }
       }
     }
