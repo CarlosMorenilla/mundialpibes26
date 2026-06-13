@@ -10,16 +10,13 @@ function loadSavedResults() {
     if (saved) {
       var parsed = JSON.parse(saved);
       var keys = Object.keys(parsed);
-      var cleaned = 0;
       for (var i = 0; i < keys.length; i++) {
         var r = parsed[keys[i]];
-        if (r.status === 'live' || r.status === 'finished') {
+        if (r.status === 'finished') {
           matchResults[keys[i]] = r;
-        } else {
-          cleaned++;
         }
       }
-      console.log('[Scores] Loaded', Object.keys(matchResults).length, 'results, cleaned', cleaned, 'stale');
+      console.log('[Scores] Loaded', Object.keys(matchResults).length, 'finished results from cache');
       saveResults();
     }
   } catch(e) {}
