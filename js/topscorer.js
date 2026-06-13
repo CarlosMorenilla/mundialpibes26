@@ -47,18 +47,22 @@ function loadScorersFromAPI() {
       }
       // Match API scorers to real players
       var apiNames = Object.keys(apiScorers);
+      var matchedCount = 0;
       for (var j = 0; j < apiNames.length; j++) {
         var apiName = apiNames[j];
         var goals = apiScorers[apiName];
         var matched = findPlayerByAPIName(apiName);
         if (matched) {
-          matched.goals += goals;
-          console.log('[TopScorer] Matched:', apiName, '->', matched.name, '(' + matched.goals + ' goals)');
+          matched.goals = goals;
+          matchedCount++;
+          console.log('[TopScorer] MATCH:', apiName, '->', matched.name, '(' + matched.goals + ' goals)');
         } else {
-          console.log('[TopScorer] No match for:', apiName);
+          console.log('[TopScorer] NO MATCH:', apiName);
         }
       }
-      console.log('[TopScorer] Matched scorers from API');
+      var withGoals = allPlayers.filter(function(p) { return p.goals > 0; });
+      console.log('[TopScorer] Total matched:', matchedCount, '| Players with goals:', withGoals.length);
+      withGoals.forEach(function(p) { console.log('  ', p.name, p.goals, 'goals'); });
     })
     .catch(function(e) {
       console.log('[TopScorer] API error:', e);
