@@ -1555,37 +1555,46 @@ body {
 
 .topscorer-search {
   margin-bottom: 20px;
-  position: relative;
 }
 
-.topscorer-search input {
-  width: 100%;
-  padding: 12px 16px;
+.topscorer-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
   border: 2px solid var(--border);
   border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-family: 'Oswald', sans-serif;
-  background: var(--bg-card);
-  color: var(--text);
+  padding: 0 12px;
   transition: border-color 0.2s;
 }
 
-.topscorer-search input:focus {
-  outline: none;
+.topscorer-search-row:focus-within {
   border-color: var(--gold);
 }
 
+.topscorer-search-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.topscorer-search input {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  font-size: 0.9rem;
+  font-family: 'Oswald', sans-serif;
+  background: transparent;
+  color: var(--text);
+  outline: none;
+}
+
 .topscorer-results {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 0 0 var(--radius) var(--radius);
   box-shadow: var(--shadow-lg);
-  max-height: 300px;
+  max-height: 250px;
   overflow-y: auto;
   z-index: 50;
 }
@@ -1608,24 +1617,6 @@ body {
   background: rgba(212,168,67,0.08);
 }
 
-.topscorer-result-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.topscorer-result-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gradient-gold);
-  color: white;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
 .topscorer-result-info {
   flex: 1;
   min-width: 0;
@@ -1634,25 +1625,13 @@ body {
 .topscorer-result-name {
   font-weight: 600;
   font-size: 0.85rem;
-}
-
-.topscorer-result-meta {
-  font-size: 0.7rem;
-  color: var(--text-light);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
-.topscorer-result-meta img {
-  width: 14px;
-}
-
-.topscorer-result-empty {
-  padding: 12px 14px;
-  color: var(--text-light);
-  font-size: 0.8rem;
-  text-align: center;
+.topscorer-result-name img {
+  width: 16px;
 }
 
 .topscorer-section-title {
@@ -1664,64 +1643,88 @@ body {
   margin-bottom: 12px;
 }
 
-.topscorer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+/* Leaderboard */
+.topscorer-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.topscorer-card {
+.topscorer-rank-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
-  text-align: center;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.topscorer-card:hover {
+.topscorer-rank-item:hover {
   border-color: var(--gold);
-  transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
 
-.topscorer-card-img {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 8px;
+.topscorer-rank-item.selected {
+  border-color: var(--gold);
+  background: rgba(212,168,67,0.06);
 }
 
-.topscorer-card-placeholder {
+.topscorer-rank-pos {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gradient-gold);
-  color: white;
+  font-size: 0.7rem;
   font-weight: 700;
-  font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
-.topscorer-card-name {
+.topscorer-rank-item:nth-child(1) .topscorer-rank-pos { background: var(--gold); }
+.topscorer-rank-item:nth-child(2) .topscorer-rank-pos { background: #c0c0c0; }
+.topscorer-rank-item:nth-child(3) .topscorer-rank-pos { background: #cd7f32; }
+
+.topscorer-rank-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.topscorer-rank-name {
   font-weight: 600;
-  font-size: 0.8rem;
-  color: var(--primary);
-  margin-bottom: 2px;
+  font-size: 0.85rem;
+  color: var(--text);
 }
 
-.topscorer-card-meta {
-  font-size: 0.65rem;
+.topscorer-rank-meta {
+  font-size: 0.7rem;
   color: var(--text-light);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
+  gap: 4px;
 }
 
-.topscorer-card-meta img {
+.topscorer-rank-meta img {
   width: 14px;
+}
+
+.topscorer-rank-goals {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+.topscorer-rank-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-light);
+  font-size: 0.85rem;
 }
 
 .btn-sm {

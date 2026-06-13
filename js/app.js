@@ -33,8 +33,10 @@ function initApp() {
         renderCurrentSection();
         startScorePolling();
         loadLeaderboard();
-        loadMyTopScorer();
-        allLoaded = true;
+        loadTournamentScorers().then(function() {
+          loadMyTopScorer();
+          allLoaded = true;
+        });
       });
     });
   });

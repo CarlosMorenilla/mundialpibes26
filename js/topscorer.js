@@ -1,65 +1,71 @@
-// MundialPibes26 - Maximo goleador (sin API, lista popular + input libre)
+// MundialPibes26 - Maximo goleador (lista de goleadores del torneo + busqueda)
 
 var myTopScorer = null;
+var tournamentScorers = [];
 
-var POPULAR_PLAYERS = [
-  { name: 'Kylian Mbappe', team: 'FRA' },
-  { name: 'Jude Bellingham', team: 'ENG' },
-  { name: 'Harry Kane', team: 'ENG' },
-  { name: 'Bukayo Saka', team: 'ENG' },
-  { name: 'Phil Foden', team: 'ENG' },
-  { name: 'Lamine Yamal', team: 'ESP' },
-  { name: 'Alvaro Morata', team: 'ESP' },
-  { name: 'Pedri', team: 'ESP' },
-  { name: 'Jamal Musiala', team: 'GER' },
-  { name: 'Florian Wirtz', team: 'GER' },
-  { name: 'Kai Havertz', team: 'GER' },
-  { name: 'Lautaro Martinez', team: 'ARG' },
-  { name: 'Julian Alvarez', team: 'ARG' },
-  { name: 'Lionel Messi', team: 'ARG' },
-  { name: 'Vinicius Junior', team: 'BRA' },
-  { name: 'Rodrygo', team: 'BRA' },
-  { name: 'Raphinha', team: 'BRA' },
-  { name: 'Ousmane Dembele', team: 'FRA' },
-  { name: 'Marcus Thuram', team: 'FRA' },
-  { name: 'Federico Valverde', team: 'URU' },
-  { name: 'Darwin Nunez', team: 'URU' },
-  { name: 'Bruno Fernandes', team: 'POR' },
-  { name: 'Cristiano Ronaldo', team: 'POR' },
-  { name: 'Rafael Leao', team: 'POR' },
-  { name: 'Memphis Depay', team: 'NED' },
-  { name: 'Cody Gakpo', team: 'NED' },
-  { name: 'Dusan Vlahovic', team: 'NED' },
-  { name: 'Romelu Lukaku', team: 'BEL' },
-  { name: 'Kevin De Bruyne', team: 'BEL' },
-  { name: 'Luka Modric', team: 'CRO' },
-  { name: 'Ante Budimir', team: 'CRO' },
-  { name: 'Niclas Fullkrug', team: 'GER' },
-  { name: 'Nicolo Barella', team: 'ITA' },
-  { name: 'Randal Kolo Muani', team: 'FRA' },
-  { name: 'Jonathan David', team: 'CAN' },
-  { name: 'Alvaro Vega', team: 'MEX' },
-  { name: 'Santiago Gimenez', team: 'MEX' },
-  { name: 'Edinson Cavani', team: 'URU' },
-  { name: 'Neymar', team: 'BRA' },
-  { name: 'Youssef En-Nesyri', team: 'MAR' },
-  { name: 'Achraf Hakimi', team: 'MAR' },
-  { name: 'Alessandro Del Piero', team: 'ITA' }
-];
+function loadTournamentScorers() {
+  return fetch(WORLDCUP_API + '/get/games')
+    .then(function(r) { return r.ok ? r.json() : {games:[]}; })
+    .then(function(data) {
+      var games = data.games || [];
+      var scorers = {};
+      for (var i = 0; i < games.length; i++) {
+        var g = games[i];
+        processScorerField(g.home_scorers, scorers);
+        processScorerField(g.away_scorers, scorers);
+      }
+      tournamentScorers = [];
+      var names = Object.keys(scorers);
+      for (var j = 0; j < names.length; j++) {
+        tournamentScorers.push({
+          name: names[j],
+          goals: scorers[names[j]].goals,
+          team: scorers[names[j]].team
+        });
+      }
+      tournamentScorers.sort(function(a, b) { return b.goals - a.goals; });
+      console.log('[TopScorer] Found', tournamentScorers.length, 'scorers from API');
+    })
+    .catch(function(e) {
+      console.log('[TopScorer] API error:', e);
+    });
+}
+
+function processScorerField(field, scorers) {
+  if (!field || field === 'null') return;
+  var items;
+  if (typeof field === 'string') {
+    var cleaned = field.replace(/[{}]/g, '');
+    if (!cleaned) return;
+    items = cleaned.split(',');
+  } else if (Array.isArray(field)) {
+    items = field;
+  } else {
+    return;
+  }
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i].trim().replace(/^"|"$/g, '');
+    if (!item) continue;
+    var match = item.match(/^(.+?)\s+(\d+[\'+]*)$/);
+    if (match) {
+      var name = match[1].trim();
+      if (!scorers[name]) {
+        scorers[name] = { goals: 0, team: '' };
+      }
+      scorers[name].goals++;
+    }
+  }
+}
 
 function loadMyTopScorer() {
   if (!supabase || !currentUser) return Promise.resolve();
-
   return supabase.from('top_scorer_predictions')
     .select('player_name, team_code')
     .eq('user_id', currentUser.id)
     .single()
     .then(function(result) {
       if (result.data) {
-        myTopScorer = {
-          name: result.data.player_name,
-          team: result.data.team_code || ''
-        };
+        myTopScorer = { name: result.data.player_name, team: result.data.team_code || '' };
       }
     }).catch(function() {
       myTopScorer = null;
@@ -68,15 +74,12 @@ function loadMyTopScorer() {
 
 function saveTopScorer(name, teamCode) {
   if (!supabase || !currentUser || !name) return;
-
   myTopScorer = { name: name, team: teamCode || '' };
-
   var prediction = {
     user_id: currentUser.id,
     player_name: name,
     team_code: teamCode || null
   };
-
   supabase.from('top_scorer_predictions').upsert(prediction, {
     onConflict: 'user_id'
   }).then(function() {
@@ -120,29 +123,97 @@ function renderTopScorer() {
   }
 
   html += '<div class="topscorer-search">';
-  html += '<input type="text" id="topscorer-input" placeholder="Escribe el nombre del jugador..." autocomplete="off">';
+  html += '<div class="topscorer-search-row">';
+  html += '<span class="topscorer-search-icon">🔍</span>';
+  html += '<input type="text" id="topscorer-input" placeholder="Buscar jugador o escribir nombre..." autocomplete="off" oninput="filterScorers()">';
+  html += '</div>';
+  html += '<div id="topscorer-results" class="topscorer-results" style="display:none;"></div>';
   html += '<button class="btn btn-primary" onclick="submitTopScorer()" style="margin-top:8px;width:100%;">Guardar</button>';
   html += '</div>';
 
-  html += '<div class="topscorer-popular">';
-  html += '<div class="topscorer-section-title">Jugadores populares</div>';
-  html += '<div class="topscorer-grid">';
+  html += '<div class="topscorer-section-title">Clasificacion de goleadores</div>';
+  html += '<div id="topscorer-list" class="topscorer-leaderboard">';
+  html += renderScorerLeaderboard('');
+  html += '</div>';
 
-  for (var i = 0; i < POPULAR_PLAYERS.length; i++) {
-    var p = POPULAR_PLAYERS[i];
-    var pFlag = getFlagImg(p.team, 24);
+  container.innerHTML = html;
+}
+
+function renderScorerLeaderboard(filter) {
+  var lower = filter.toLowerCase();
+  var html = '';
+  var count = 0;
+
+  for (var i = 0; i < tournamentScorers.length; i++) {
+    var p = tournamentScorers[i];
+    if (lower && p.name.toLowerCase().indexOf(lower) === -1) continue;
+    count++;
+    var flag = getFlagImg(p.team, 20);
     var isSelected = myTopScorer && myTopScorer.name === p.name;
-
-    html += '<div class="topscorer-card' + (isSelected ? ' topscorer-card-selected' : '') + '" onclick="quickSelectScorer(\'' + p.name.replace(/'/g, "\\'") + '\', \'' + p.team + '\')">';
-    html += '<div class="topscorer-card-img topscorer-card-placeholder">' + p.name.charAt(0) + '</div>';
-    html += '<div class="topscorer-card-name">' + p.name + '</div>';
-    html += '<div class="topscorer-card-meta">' + pFlag + ' ' + getTeamShortName(p.team) + '</div>';
+    html += '<div class="topscorer-rank-item' + (isSelected ? ' selected' : '') + '" onclick="quickSelectScorer(\'' + p.name.replace(/'/g, "\\'") + '\', \'' + (p.team || '').replace(/'/g, "\\'") + '\')">';
+    html += '<div class="topscorer-rank-pos">' + count + '</div>';
+    html += '<div class="topscorer-rank-info">';
+    html += '<div class="topscorer-rank-name">' + p.name + '</div>';
+    html += '<div class="topscorer-rank-meta">' + flag + ' ' + (p.team ? getTeamShortName(p.team) : '') + '</div>';
+    html += '</div>';
+    html += '<div class="topscorer-rank-goals">' + p.goals + ' ⚽</div>';
     html += '</div>';
   }
 
-  html += '</div></div>';
+  if (count === 0) {
+    html += '<div class="topscorer-rank-empty">No se encontraron jugadores</div>';
+  }
 
-  container.innerHTML = html;
+  return html;
+}
+
+function filterScorers() {
+  var input = document.getElementById('topscorer-input');
+  var resultsDiv = document.getElementById('topscorer-results');
+  var listDiv = document.getElementById('topscorer-list');
+  if (!input || !resultsDiv || !listDiv) return;
+
+  var val = input.value.trim();
+  if (val.length < 1) {
+    resultsDiv.style.display = 'none';
+    listDiv.innerHTML = renderScorerLeaderboard('');
+    return;
+  }
+
+  var lower = val.toLowerCase();
+  var matches = [];
+  for (var i = 0; i < tournamentScorers.length; i++) {
+    if (tournamentScorers[i].name.toLowerCase().indexOf(lower) !== -1) {
+      matches.push(tournamentScorers[i]);
+    }
+  }
+
+  if (matches.length > 0) {
+    var html = '';
+    for (var j = 0; j < Math.min(matches.length, 5); j++) {
+      var p = matches[j];
+      var flag = getFlagImg(p.team, 18);
+      html += '<div class="topscorer-result-item" onclick="selectFromSearch(\'' + p.name.replace(/'/g, "\\'") + '\', \'' + (p.team || '').replace(/'/g, "\\'") + '\')">';
+      html += '<div class="topscorer-result-info">';
+      html += '<div class="topscorer-result-name">' + flag + ' ' + p.name + ' (' + p.goals + ' ⚽)</div>';
+      html += '</div></div>';
+    }
+    resultsDiv.innerHTML = html;
+    resultsDiv.style.display = 'block';
+  } else {
+    resultsDiv.innerHTML = '<div class="topscorer-result-item" onclick="submitTopScorer()">Añadir "' + val + '" como goleador</div>';
+    resultsDiv.style.display = 'block';
+  }
+
+  listDiv.innerHTML = renderScorerLeaderboard(val);
+}
+
+function selectFromSearch(name, team) {
+  var input = document.getElementById('topscorer-input');
+  var resultsDiv = document.getElementById('topscorer-results');
+  if (input) input.value = name;
+  if (resultsDiv) resultsDiv.style.display = 'none';
+  saveTopScorer(name, team);
 }
 
 function submitTopScorer() {
@@ -153,7 +224,14 @@ function submitTopScorer() {
     showToast('Escribe un nombre', 'error');
     return;
   }
-  saveTopScorer(name, null);
+  var found = null;
+  for (var i = 0; i < tournamentScorers.length; i++) {
+    if (tournamentScorers[i].name.toLowerCase() === name.toLowerCase()) {
+      found = tournamentScorers[i];
+      break;
+    }
+  }
+  saveTopScorer(name, found ? found.team : null);
 }
 
 function quickSelectScorer(name, team) {
