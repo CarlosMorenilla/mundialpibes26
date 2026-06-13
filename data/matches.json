@@ -1,1474 +1,1304 @@
 {
-  "groups": {
-    "A": [
-      "MEX",
-      "RSA",
-      "KOR",
-      "CZE"
-    ],
-    "B": [
-      "CAN",
-      "BIH",
-      "QAT",
-      "SUI"
-    ],
-    "C": [
-      "BRA",
-      "MAR",
-      "HAI",
-      "SCO"
-    ],
-    "D": [
-      "USA",
-      "PAR",
-      "AUS",
-      "TUR"
-    ],
-    "E": [
-      "GER",
-      "CUW",
-      "CIV",
-      "ECU"
-    ],
-    "F": [
-      "NED",
-      "JPN",
-      "SWE",
-      "TUN"
-    ],
-    "G": [
-      "BEL",
-      "EGY",
-      "IRN",
-      "NZL"
-    ],
-    "H": [
-      "ESP",
-      "CPV",
-      "KSA",
-      "URU"
-    ],
-    "I": [
-      "FRA",
-      "SEN",
-      "IRQ",
-      "NOR"
-    ],
-    "J": [
-      "ARG",
-      "ALG",
-      "AUT",
-      "JOR"
-    ],
-    "K": [
-      "POR",
-      "COD",
-      "UZB",
-      "COL"
-    ],
-    "L": [
-      "ENG",
-      "CRO",
-      "GHA",
-      "PAN"
-    ]
-  },
   "teams": {
     "MEX": {
       "name": "Mexico",
-      "flag": "🇲🇽",
-      "group": "A"
+      "code": "MEX"
     },
     "RSA": {
-      "name": "Sudafrica",
-      "flag": "🇿🇦",
-      "group": "A"
+      "name": "South Africa",
+      "code": "RSA"
     },
     "KOR": {
-      "name": "Corea del Sur",
-      "flag": "🇰🇷",
-      "group": "A"
+      "name": "South Korea",
+      "code": "KOR"
     },
     "CZE": {
-      "name": "Republica Checa",
-      "flag": "🇨🇿",
-      "group": "A"
+      "name": "Czech Republic",
+      "code": "CZE"
     },
     "CAN": {
       "name": "Canada",
-      "flag": "🇨🇦",
-      "group": "B"
+      "code": "CAN"
     },
     "BIH": {
-      "name": "Bosnia y Herzegovina",
-      "flag": "🇧🇦",
-      "group": "B"
+      "name": "Bosnia and Herzegovina",
+      "code": "BIH"
     },
     "QAT": {
       "name": "Qatar",
-      "flag": "🇶🇦",
-      "group": "B"
+      "code": "QAT"
     },
     "SUI": {
-      "name": "Suiza",
-      "flag": "🇨🇭",
-      "group": "B"
+      "name": "Switzerland",
+      "code": "SUI"
     },
     "BRA": {
-      "name": "Brasil",
-      "flag": "🇧🇷",
-      "group": "C"
+      "name": "Brazil",
+      "code": "BRA"
     },
     "MAR": {
-      "name": "Marruecos",
-      "flag": "🇲🇦",
-      "group": "C"
+      "name": "Morocco",
+      "code": "MAR"
     },
     "HAI": {
       "name": "Haiti",
-      "flag": "🇭🇹",
-      "group": "C"
+      "code": "HAI"
     },
     "SCO": {
-      "name": "Escocia",
-      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-      "group": "C"
+      "name": "Scotland",
+      "code": "SCO"
     },
     "USA": {
-      "name": "Estados Unidos",
-      "flag": "🇺🇸",
-      "group": "D"
+      "name": "United States",
+      "code": "USA"
     },
     "PAR": {
       "name": "Paraguay",
-      "flag": "🇵🇾",
-      "group": "D"
+      "code": "PAR"
     },
     "AUS": {
       "name": "Australia",
-      "flag": "🇦🇺",
-      "group": "D"
+      "code": "AUS"
     },
     "TUR": {
-      "name": "Turquia",
-      "flag": "🇹🇷",
-      "group": "D"
+      "name": "Turkey",
+      "code": "TUR"
     },
     "GER": {
-      "name": "Alemania",
-      "flag": "🇩🇪",
-      "group": "E"
+      "name": "Germany",
+      "code": "GER"
     },
     "CUW": {
-      "name": "Curazao",
-      "flag": "🇨🇼",
-      "group": "E"
+      "name": "Curaçao",
+      "code": "CUW"
     },
     "CIV": {
-      "name": "Costa de Marfil",
-      "flag": "🇨🇮",
-      "group": "E"
+      "name": "Ivory Coast",
+      "code": "CIV"
     },
     "ECU": {
       "name": "Ecuador",
-      "flag": "🇪🇨",
-      "group": "E"
+      "code": "ECU"
     },
     "NED": {
-      "name": "Paises Bajos",
-      "flag": "🇳🇱",
-      "group": "F"
+      "name": "Netherlands",
+      "code": "NED"
     },
     "JPN": {
-      "name": "Japon",
-      "flag": "🇯🇵",
-      "group": "F"
+      "name": "Japan",
+      "code": "JPN"
     },
     "SWE": {
-      "name": "Suecia",
-      "flag": "🇸🇪",
-      "group": "F"
+      "name": "Sweden",
+      "code": "SWE"
     },
     "TUN": {
-      "name": "Tunez",
-      "flag": "🇹🇳",
-      "group": "F"
+      "name": "Tunisia",
+      "code": "TUN"
     },
     "BEL": {
-      "name": "Belgica",
-      "flag": "🇧🇪",
-      "group": "G"
+      "name": "Belgium",
+      "code": "BEL"
     },
     "EGY": {
-      "name": "Egipto",
-      "flag": "🇪🇬",
-      "group": "G"
+      "name": "Egypt",
+      "code": "EGY"
     },
     "IRN": {
       "name": "Iran",
-      "flag": "🇮🇷",
-      "group": "G"
+      "code": "IRN"
     },
     "NZL": {
-      "name": "Nueva Zelanda",
-      "flag": "🇳🇿",
-      "group": "G"
+      "name": "New Zealand",
+      "code": "NZL"
     },
     "ESP": {
-      "name": "Espana",
-      "flag": "🇪🇸",
-      "group": "H"
+      "name": "Spain",
+      "code": "ESP"
     },
     "CPV": {
-      "name": "Cabo Verde",
-      "flag": "🇨🇻",
-      "group": "H"
+      "name": "Cape Verde",
+      "code": "CPV"
     },
     "KSA": {
-      "name": "Arabia Saudita",
-      "flag": "🇸🇦",
-      "group": "H"
+      "name": "Saudi Arabia",
+      "code": "KSA"
     },
     "URU": {
       "name": "Uruguay",
-      "flag": "🇺🇾",
-      "group": "H"
+      "code": "URU"
     },
     "FRA": {
-      "name": "Francia",
-      "flag": "🇫🇷",
-      "group": "I"
+      "name": "France",
+      "code": "FRA"
     },
     "SEN": {
       "name": "Senegal",
-      "flag": "🇸🇳",
-      "group": "I"
+      "code": "SEN"
     },
     "IRQ": {
-      "name": "Irak",
-      "flag": "🇮🇶",
-      "group": "I"
+      "name": "Iraq",
+      "code": "IRQ"
     },
     "NOR": {
-      "name": "Noruega",
-      "flag": "🇳🇴",
-      "group": "I"
+      "name": "Norway",
+      "code": "NOR"
     },
     "ARG": {
       "name": "Argentina",
-      "flag": "🇦🇷",
-      "group": "J"
+      "code": "ARG"
     },
     "ALG": {
-      "name": "Argelia",
-      "flag": "🇩🇿",
-      "group": "J"
+      "name": "Algeria",
+      "code": "ALG"
     },
     "AUT": {
       "name": "Austria",
-      "flag": "🇦🇹",
-      "group": "J"
+      "code": "AUT"
     },
     "JOR": {
-      "name": "Jordania",
-      "flag": "🇯🇴",
-      "group": "J"
+      "name": "Jordan",
+      "code": "JOR"
     },
     "POR": {
       "name": "Portugal",
-      "flag": "🇵🇹",
-      "group": "K"
+      "code": "POR"
     },
     "COD": {
-      "name": "RD Congo",
-      "flag": "🇨🇩",
-      "group": "K"
+      "name": "Democratic Republic of the Congo",
+      "code": "COD"
     },
     "UZB": {
       "name": "Uzbekistan",
-      "flag": "🇺🇿",
-      "group": "K"
+      "code": "UZB"
     },
     "COL": {
       "name": "Colombia",
-      "flag": "🇨🇴",
-      "group": "K"
+      "code": "COL"
     },
     "ENG": {
-      "name": "Inglaterra",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "group": "L"
+      "name": "England",
+      "code": "ENG"
     },
     "CRO": {
-      "name": "Croacia",
-      "flag": "🇭🇷",
-      "group": "L"
+      "name": "Croatia",
+      "code": "CRO"
     },
     "GHA": {
       "name": "Ghana",
-      "flag": "🇬🇭",
-      "group": "L"
+      "code": "GHA"
     },
     "PAN": {
       "name": "Panama",
-      "flag": "🇵🇦",
-      "group": "L"
-    }
-  },
-  "venues": {
-    "mexico_city": {
-      "name": "Estadio Azteca",
-      "city": "Ciudad de Mexico",
-      "country": "MEX"
-    },
-    "guadalajara": {
-      "name": "Estadio Akron",
-      "city": "Guadalajara",
-      "country": "MEX"
-    },
-    "monterrey": {
-      "name": "Estadio BBVA",
-      "city": "Monterrey",
-      "country": "MEX"
-    },
-    "toronto": {
-      "name": "BMO Field",
-      "city": "Toronto",
-      "country": "CAN"
-    },
-    "vancouver": {
-      "name": "BC Place",
-      "city": "Vancouver",
-      "country": "CAN"
-    },
-    "los_angeles": {
-      "name": "SoFi Stadium",
-      "city": "Los Angeles",
-      "country": "USA"
-    },
-    "san_francisco": {
-      "name": "Levi's Stadium",
-      "city": "San Francisco",
-      "country": "USA"
-    },
-    "seattle": {
-      "name": "Lumen Field",
-      "city": "Seattle",
-      "country": "USA"
-    },
-    "houston": {
-      "name": "NRG Stadium",
-      "city": "Houston",
-      "country": "USA"
-    },
-    "dallas": {
-      "name": "AT&T Stadium",
-      "city": "Dallas",
-      "country": "USA"
-    },
-    "atlanta": {
-      "name": "Mercedes-Benz Stadium",
-      "city": "Atlanta",
-      "country": "USA"
-    },
-    "boston": {
-      "name": "Gillette Stadium",
-      "city": "Boston",
-      "country": "USA"
-    },
-    "kansas_city": {
-      "name": "GEHA Field",
-      "city": "Kansas City",
-      "country": "USA"
-    },
-    "miami": {
-      "name": "Hard Rock Stadium",
-      "city": "Miami",
-      "country": "USA"
-    },
-    "new_york": {
-      "name": "MetLife Stadium",
-      "city": "Nueva York",
-      "country": "USA"
-    },
-    "philadelphia": {
-      "name": "Lincoln Financial Field",
-      "city": "Filadelfia",
-      "country": "USA"
+      "code": "PAN"
     }
   },
   "matches": [
     {
       "id": 1,
+      "home": "MEX",
+      "away": "RSA",
+      "date": "2026-06-11",
+      "time": "21:00",
       "stage": "group",
       "group": "A",
-      "date": "2026-06-11",
-      "time": "20:00",
-      "venue": "mexico_city",
-      "home": "MEX",
-      "away": "RSA"
+      "venue": "1"
     },
     {
       "id": 2,
+      "home": "KOR",
+      "away": "CZE",
+      "date": "2026-06-12",
+      "time": "04:00",
       "stage": "group",
       "group": "A",
-      "date": "2026-06-12",
-      "time": "03:00",
-      "venue": "guadalajara",
-      "home": "KOR",
-      "away": "CZE"
+      "venue": "2"
     },
     {
       "id": 3,
+      "home": "CAN",
+      "away": "BIH",
+      "date": "2026-06-12",
+      "time": "23:00",
       "stage": "group",
       "group": "B",
-      "date": "2026-06-12",
-      "time": "20:00",
-      "venue": "toronto",
-      "home": "CAN",
-      "away": "BIH"
+      "venue": "12"
     },
     {
       "id": 4,
-      "stage": "group",
-      "group": "D",
+      "home": "USA",
+      "away": "PAR",
       "date": "2026-06-13",
       "time": "02:00",
-      "venue": "los_angeles",
-      "home": "USA",
-      "away": "PAR"
+      "stage": "group",
+      "group": "D",
+      "venue": "16"
     },
     {
       "id": 5,
+      "home": "HAI",
+      "away": "SCO",
+      "date": "2026-06-14",
+      "time": "05:00",
       "stage": "group",
-      "group": "B",
-      "date": "2026-06-13",
-      "time": "20:00",
-      "venue": "san_francisco",
-      "home": "QAT",
-      "away": "SUI"
+      "group": "C",
+      "venue": "9"
     },
     {
       "id": 6,
-      "stage": "group",
-      "group": "C",
+      "home": "AUS",
+      "away": "TUR",
       "date": "2026-06-14",
-      "time": "01:00",
-      "venue": "new_york",
-      "home": "BRA",
-      "away": "MAR"
+      "time": "05:00",
+      "stage": "group",
+      "group": "D",
+      "venue": "13"
     },
     {
       "id": 7,
-      "stage": "group",
-      "group": "C",
+      "home": "BRA",
+      "away": "MAR",
       "date": "2026-06-14",
       "time": "02:00",
-      "venue": "boston",
-      "home": "HAI",
-      "away": "SCO"
+      "stage": "group",
+      "group": "C",
+      "venue": "11"
     },
     {
       "id": 8,
+      "home": "QAT",
+      "away": "SUI",
+      "date": "2026-06-13",
+      "time": "20:00",
       "stage": "group",
-      "group": "D",
-      "date": "2026-06-14",
-      "time": "17:00",
-      "venue": "vancouver",
-      "home": "AUS",
-      "away": "TUR"
+      "group": "B",
+      "venue": "15"
     },
     {
       "id": 9,
+      "home": "CIV",
+      "away": "ECU",
+      "date": "2026-06-15",
+      "time": "03:00",
       "stage": "group",
       "group": "E",
-      "date": "2026-06-14",
-      "time": "19:00",
-      "venue": "houston",
-      "home": "GER",
-      "away": "CUW"
+      "venue": "10"
     },
     {
       "id": 10,
+      "home": "GER",
+      "away": "CUW",
+      "date": "2026-06-14",
+      "time": "20:00",
       "stage": "group",
       "group": "E",
-      "date": "2026-06-15",
-      "time": "01:00",
-      "venue": "philadelphia",
-      "home": "CIV",
-      "away": "ECU"
+      "venue": "5"
     },
     {
       "id": 11,
+      "home": "NED",
+      "away": "JPN",
+      "date": "2026-06-14",
+      "time": "23:00",
       "stage": "group",
       "group": "F",
-      "date": "2026-06-15",
-      "time": "02:00",
-      "venue": "dallas",
-      "home": "NED",
-      "away": "JPN"
+      "venue": "4"
     },
     {
       "id": 12,
+      "home": "SWE",
+      "away": "TUN",
+      "date": "2026-06-15",
+      "time": "04:00",
       "stage": "group",
       "group": "F",
-      "date": "2026-06-15",
-      "time": "05:00",
-      "venue": "monterrey",
-      "home": "SWE",
-      "away": "TUN"
+      "venue": "3"
     },
     {
       "id": 13,
+      "home": "IRN",
+      "away": "NZL",
+      "date": "2026-06-16",
+      "time": "02:00",
       "stage": "group",
-      "group": "H",
-      "date": "2026-06-15",
-      "time": "17:00",
-      "venue": "atlanta",
-      "home": "ESP",
-      "away": "CPV"
+      "group": "G",
+      "venue": "16"
     },
     {
       "id": 14,
+      "home": "ESP",
+      "away": "CPV",
+      "date": "2026-06-15",
+      "time": "20:00",
       "stage": "group",
       "group": "H",
-      "date": "2026-06-15",
-      "time": "21:00",
-      "venue": "miami",
-      "home": "KSA",
-      "away": "URU"
+      "venue": "7"
     },
     {
       "id": 15,
+      "home": "BEL",
+      "away": "EGY",
+      "date": "2026-06-15",
+      "time": "20:00",
       "stage": "group",
       "group": "G",
-      "date": "2026-06-16",
-      "time": "01:00",
-      "venue": "seattle",
-      "home": "IRN",
-      "away": "NZL"
+      "venue": "14"
     },
     {
       "id": 16,
-      "stage": "group",
-      "group": "G",
+      "home": "KSA",
+      "away": "URU",
       "date": "2026-06-16",
-      "time": "04:00",
-      "venue": "los_angeles",
-      "home": "BEL",
-      "away": "EGY"
+      "time": "02:00",
+      "stage": "group",
+      "group": "H",
+      "venue": "8"
     },
     {
       "id": 17,
+      "home": "FRA",
+      "away": "SEN",
+      "date": "2026-06-16",
+      "time": "23:00",
       "stage": "group",
       "group": "I",
-      "date": "2026-06-17",
-      "time": "01:00",
-      "venue": "new_york",
-      "home": "FRA",
-      "away": "SEN"
+      "venue": "11"
     },
     {
       "id": 18,
+      "home": "IRQ",
+      "away": "NOR",
+      "date": "2026-06-17",
+      "time": "02:00",
       "stage": "group",
       "group": "I",
-      "date": "2026-06-17",
-      "time": "04:00",
-      "venue": "boston",
-      "home": "IRQ",
-      "away": "NOR"
+      "venue": "9"
     },
     {
       "id": 19,
+      "home": "ARG",
+      "away": "ALG",
+      "date": "2026-06-17",
+      "time": "04:00",
       "stage": "group",
       "group": "J",
-      "date": "2026-06-17",
-      "time": "20:00",
-      "venue": "kansas_city",
-      "home": "ARG",
-      "away": "ALG"
+      "venue": "6"
     },
     {
       "id": 20,
+      "home": "AUT",
+      "away": "JOR",
+      "date": "2026-06-17",
+      "time": "05:00",
       "stage": "group",
       "group": "J",
-      "date": "2026-06-17",
-      "time": "23:00",
-      "venue": "san_francisco",
-      "home": "AUT",
-      "away": "JOR"
+      "venue": "15"
     },
     {
       "id": 21,
+      "home": "POR",
+      "away": "COD",
+      "date": "2026-06-17",
+      "time": "20:00",
       "stage": "group",
-      "group": "L",
-      "date": "2026-06-18",
-      "time": "01:00",
-      "venue": "toronto",
-      "home": "GHA",
-      "away": "PAN"
+      "group": "K",
+      "venue": "5"
     },
     {
       "id": 22,
+      "home": "ENG",
+      "away": "CRO",
+      "date": "2026-06-17",
+      "time": "23:00",
       "stage": "group",
       "group": "L",
-      "date": "2026-06-18",
-      "time": "02:00",
-      "venue": "dallas",
-      "home": "ENG",
-      "away": "CRO"
+      "venue": "4"
     },
     {
       "id": 23,
+      "home": "UZB",
+      "away": "COL",
+      "date": "2026-06-18",
+      "time": "04:00",
       "stage": "group",
       "group": "K",
-      "date": "2026-06-18",
-      "time": "02:00",
-      "venue": "houston",
-      "home": "POR",
-      "away": "COD"
+      "venue": "1"
     },
     {
       "id": 24,
-      "stage": "group",
-      "group": "K",
+      "home": "GHA",
+      "away": "PAN",
       "date": "2026-06-18",
-      "time": "05:00",
-      "venue": "mexico_city",
-      "home": "UZB",
-      "away": "COL"
+      "time": "03:00",
+      "stage": "group",
+      "group": "L",
+      "venue": "12"
     },
     {
       "id": 25,
+      "home": "MEX",
+      "away": "KOR",
+      "date": "2026-06-19",
+      "time": "03:00",
       "stage": "group",
       "group": "A",
-      "date": "2026-06-18",
-      "time": "17:00",
-      "venue": "atlanta",
-      "home": "CZE",
-      "away": "RSA"
+      "venue": "2"
     },
     {
       "id": 26,
-      "stage": "group",
-      "group": "B",
+      "home": "SUI",
+      "away": "BIH",
       "date": "2026-06-18",
       "time": "20:00",
-      "venue": "los_angeles",
-      "home": "SUI",
-      "away": "BIH"
+      "stage": "group",
+      "group": "B",
+      "venue": "16"
     },
     {
       "id": 27,
+      "home": "CAN",
+      "away": "QAT",
+      "date": "2026-06-18",
+      "time": "23:00",
       "stage": "group",
       "group": "B",
-      "date": "2026-06-19",
-      "time": "01:00",
-      "venue": "vancouver",
-      "home": "CAN",
-      "away": "QAT"
+      "venue": "13"
     },
     {
       "id": 28,
+      "home": "CZE",
+      "away": "RSA",
+      "date": "2026-06-18",
+      "time": "20:00",
       "stage": "group",
       "group": "A",
-      "date": "2026-06-19",
-      "time": "02:00",
-      "venue": "guadalajara",
-      "home": "MEX",
-      "away": "KOR"
+      "venue": "7"
     },
     {
       "id": 29,
+      "home": "BRA",
+      "away": "HAI",
+      "date": "2026-06-20",
+      "time": "05:00",
       "stage": "group",
       "group": "C",
-      "date": "2026-06-20",
-      "time": "01:00",
-      "venue": "boston",
-      "home": "SCO",
-      "away": "MAR"
+      "venue": "10"
     },
     {
       "id": 30,
-      "stage": "group",
-      "group": "D",
+      "home": "SCO",
+      "away": "MAR",
       "date": "2026-06-20",
       "time": "02:00",
-      "venue": "san_francisco",
-      "home": "TUR",
-      "away": "PAR"
+      "stage": "group",
+      "group": "C",
+      "venue": "9"
     },
     {
       "id": 31,
+      "home": "USA",
+      "away": "AUS",
+      "date": "2026-06-19",
+      "time": "20:00",
       "stage": "group",
       "group": "D",
-      "date": "2026-06-20",
-      "time": "05:00",
-      "venue": "seattle",
-      "home": "USA",
-      "away": "AUS"
+      "venue": "14"
     },
     {
       "id": 32,
+      "home": "TUR",
+      "away": "PAR",
+      "date": "2026-06-20",
+      "time": "04:00",
       "stage": "group",
-      "group": "C",
-      "date": "2026-06-21",
-      "time": "00:30",
-      "venue": "philadelphia",
-      "home": "BRA",
-      "away": "HAI"
+      "group": "D",
+      "venue": "15"
     },
     {
       "id": 33,
+      "home": "GER",
+      "away": "CIV",
+      "date": "2026-06-21",
+      "time": "00:00",
       "stage": "group",
       "group": "E",
-      "date": "2026-06-21",
-      "time": "01:00",
-      "venue": "toronto",
-      "home": "GER",
-      "away": "CIV"
+      "venue": "12"
     },
     {
       "id": 34,
+      "home": "ECU",
+      "away": "CUW",
+      "date": "2026-06-21",
+      "time": "03:00",
       "stage": "group",
       "group": "E",
-      "date": "2026-06-21",
-      "time": "04:00",
-      "venue": "kansas_city",
-      "home": "ECU",
-      "away": "CUW"
+      "venue": "6"
     },
     {
       "id": 35,
+      "home": "NED",
+      "away": "SWE",
+      "date": "2026-06-20",
+      "time": "20:00",
       "stage": "group",
       "group": "F",
-      "date": "2026-06-21",
-      "time": "20:00",
-      "venue": "houston",
-      "home": "NED",
-      "away": "SWE"
+      "venue": "5"
     },
     {
       "id": 36,
+      "home": "TUN",
+      "away": "JPN",
+      "date": "2026-06-21",
+      "time": "06:00",
       "stage": "group",
       "group": "F",
-      "date": "2026-06-21",
-      "time": "05:00",
-      "venue": "monterrey",
-      "home": "TUN",
-      "away": "JPN"
+      "venue": "3"
     },
     {
       "id": 37,
+      "home": "BEL",
+      "away": "IRN",
+      "date": "2026-06-21",
+      "time": "20:00",
       "stage": "group",
-      "group": "H",
-      "date": "2026-06-22",
-      "time": "01:00",
-      "venue": "atlanta",
-      "home": "ESP",
-      "away": "URU"
+      "group": "G",
+      "venue": "16"
     },
     {
       "id": 38,
-      "stage": "group",
-      "group": "H",
+      "home": "NZL",
+      "away": "EGY",
       "date": "2026-06-22",
-      "time": "04:00",
-      "venue": "miami",
-      "home": "CPV",
-      "away": "KSA"
+      "time": "02:00",
+      "stage": "group",
+      "group": "G",
+      "venue": "13"
     },
     {
       "id": 39,
-      "stage": "group",
-      "group": "G",
-      "date": "2026-06-22",
+      "home": "ESP",
+      "away": "KSA",
+      "date": "2026-06-21",
       "time": "20:00",
-      "venue": "los_angeles",
-      "home": "BEL",
-      "away": "IRN"
+      "stage": "group",
+      "group": "H",
+      "venue": "7"
     },
     {
       "id": 40,
-      "stage": "group",
-      "group": "G",
+      "home": "URU",
+      "away": "CPV",
       "date": "2026-06-22",
-      "time": "23:00",
-      "venue": "vancouver",
-      "home": "EGY",
-      "away": "NZL"
+      "time": "02:00",
+      "stage": "group",
+      "group": "H",
+      "venue": "8"
     },
     {
       "id": 41,
-      "stage": "group",
-      "group": "I",
+      "home": "FRA",
+      "away": "IRQ",
       "date": "2026-06-23",
       "time": "01:00",
-      "venue": "new_york",
-      "home": "FRA",
-      "away": "IRQ"
+      "stage": "group",
+      "group": "I",
+      "venue": "10"
     },
     {
       "id": 42,
-      "stage": "group",
-      "group": "I",
+      "home": "NOR",
+      "away": "SEN",
       "date": "2026-06-23",
       "time": "04:00",
-      "venue": "boston",
-      "home": "SEN",
-      "away": "NOR"
+      "stage": "group",
+      "group": "I",
+      "venue": "11"
     },
     {
       "id": 43,
+      "home": "ARG",
+      "away": "AUT",
+      "date": "2026-06-22",
+      "time": "20:00",
       "stage": "group",
       "group": "J",
-      "date": "2026-06-23",
-      "time": "02:00",
-      "venue": "philadelphia",
-      "home": "ARG",
-      "away": "AUT"
+      "venue": "4"
     },
     {
       "id": 44,
+      "home": "JOR",
+      "away": "ALG",
+      "date": "2026-06-23",
+      "time": "04:00",
       "stage": "group",
       "group": "J",
-      "date": "2026-06-23",
-      "time": "02:00",
-      "venue": "atlanta",
-      "home": "ALG",
-      "away": "JOR"
+      "venue": "15"
     },
     {
       "id": 45,
-      "stage": "group",
-      "group": "L",
-      "date": "2026-06-24",
+      "home": "POR",
+      "away": "UZB",
+      "date": "2026-06-23",
       "time": "20:00",
-      "venue": "new_york",
-      "home": "PAN",
-      "away": "ENG"
+      "stage": "group",
+      "group": "K",
+      "venue": "5"
     },
     {
       "id": 46,
+      "home": "PAN",
+      "away": "CRO",
+      "date": "2026-06-24",
+      "time": "03:00",
       "stage": "group",
       "group": "L",
-      "date": "2026-06-24",
-      "time": "20:00",
-      "venue": "philadelphia",
-      "home": "CRO",
-      "away": "GHA"
+      "venue": "12"
     },
     {
       "id": 47,
+      "home": "COL",
+      "away": "COD",
+      "date": "2026-06-24",
+      "time": "04:00",
       "stage": "group",
       "group": "K",
-      "date": "2026-06-25",
-      "time": "01:30",
-      "venue": "miami",
-      "home": "COL",
-      "away": "POR"
+      "venue": "2"
     },
     {
       "id": 48,
+      "home": "ENG",
+      "away": "GHA",
+      "date": "2026-06-24",
+      "time": "00:00",
       "stage": "group",
-      "group": "K",
-      "date": "2026-06-25",
-      "time": "01:30",
-      "venue": "atlanta",
-      "home": "COD",
-      "away": "UZB"
+      "group": "L",
+      "venue": "9"
     },
     {
       "id": 49,
-      "stage": "group",
-      "group": "A",
+      "home": "SCO",
+      "away": "BRA",
       "date": "2026-06-25",
       "time": "02:00",
-      "venue": "mexico_city",
-      "home": "CZE",
-      "away": "MEX"
+      "stage": "group",
+      "group": "C",
+      "venue": "8"
     },
     {
       "id": 50,
-      "stage": "group",
-      "group": "A",
+      "home": "MAR",
+      "away": "HAI",
       "date": "2026-06-25",
       "time": "02:00",
-      "venue": "monterrey",
-      "home": "RSA",
-      "away": "KOR"
+      "stage": "group",
+      "group": "C",
+      "venue": "7"
     },
     {
       "id": 51,
-      "stage": "group",
-      "group": "B",
+      "home": "RSA",
+      "away": "KOR",
       "date": "2026-06-25",
-      "time": "20:00",
-      "venue": "vancouver",
-      "home": "SUI",
-      "away": "CAN"
+      "time": "03:00",
+      "stage": "group",
+      "group": "A",
+      "venue": "3"
     },
     {
       "id": 52,
-      "stage": "group",
-      "group": "B",
+      "home": "CZE",
+      "away": "MEX",
       "date": "2026-06-25",
-      "time": "20:00",
-      "venue": "seattle",
-      "home": "BIH",
-      "away": "QAT"
+      "time": "03:00",
+      "stage": "group",
+      "group": "A",
+      "venue": "1"
     },
     {
       "id": 53,
+      "home": "BIH",
+      "away": "QAT",
+      "date": "2026-06-24",
+      "time": "20:00",
       "stage": "group",
-      "group": "C",
-      "date": "2026-06-25",
-      "time": "23:00",
-      "venue": "miami",
-      "home": "SCO",
-      "away": "BRA"
+      "group": "B",
+      "venue": "14"
     },
     {
       "id": 54,
+      "home": "SUI",
+      "away": "CAN",
+      "date": "2026-06-24",
+      "time": "20:00",
       "stage": "group",
-      "group": "C",
-      "date": "2026-06-25",
-      "time": "23:00",
-      "venue": "atlanta",
-      "home": "MAR",
-      "away": "HAI"
+      "group": "B",
+      "venue": "13"
     },
     {
       "id": 55,
-      "stage": "group",
-      "group": "D",
+      "home": "CUW",
+      "away": "CIV",
       "date": "2026-06-26",
-      "time": "03:00",
-      "venue": "los_angeles",
-      "home": "TUR",
-      "away": "USA"
+      "time": "00:00",
+      "stage": "group",
+      "group": "E",
+      "venue": "10"
     },
     {
       "id": 56,
-      "stage": "group",
-      "group": "D",
+      "home": "ECU",
+      "away": "GER",
       "date": "2026-06-26",
-      "time": "03:00",
-      "venue": "san_francisco",
-      "home": "PAR",
-      "away": "AUS"
+      "time": "00:00",
+      "stage": "group",
+      "group": "E",
+      "venue": "11"
     },
     {
       "id": 57,
-      "stage": "group",
-      "group": "E",
+      "home": "PAR",
+      "away": "AUS",
       "date": "2026-06-26",
-      "time": "20:00",
-      "venue": "houston",
-      "home": "CUW",
-      "away": "CIV"
+      "time": "03:00",
+      "stage": "group",
+      "group": "D",
+      "venue": "15"
     },
     {
       "id": 58,
-      "stage": "group",
-      "group": "E",
+      "home": "TUR",
+      "away": "USA",
       "date": "2026-06-26",
-      "time": "20:00",
-      "venue": "dallas",
-      "home": "ECU",
-      "away": "GER"
+      "time": "03:00",
+      "stage": "group",
+      "group": "D",
+      "venue": "16"
     },
     {
       "id": 59,
+      "home": "JPN",
+      "away": "SWE",
+      "date": "2026-06-26",
+      "time": "02:00",
       "stage": "group",
       "group": "F",
-      "date": "2026-06-26",
-      "time": "23:00",
-      "venue": "monterrey",
-      "home": "JPN",
-      "away": "SWE"
+      "venue": "4"
     },
     {
       "id": 60,
+      "home": "TUN",
+      "away": "NED",
+      "date": "2026-06-26",
+      "time": "02:00",
       "stage": "group",
       "group": "F",
-      "date": "2026-06-26",
-      "time": "23:00",
-      "venue": "houston",
-      "home": "TUN",
-      "away": "NED"
+      "venue": "6"
     },
     {
       "id": 61,
+      "home": "SEN",
+      "away": "IRQ",
+      "date": "2026-06-26",
+      "time": "23:00",
       "stage": "group",
-      "group": "H",
-      "date": "2026-06-27",
-      "time": "02:00",
-      "venue": "atlanta",
-      "home": "ESP",
-      "away": "KSA"
+      "group": "I",
+      "venue": "12"
     },
     {
       "id": 62,
+      "home": "NOR",
+      "away": "FRA",
+      "date": "2026-06-26",
+      "time": "23:00",
       "stage": "group",
-      "group": "H",
-      "date": "2026-06-27",
-      "time": "02:00",
-      "venue": "miami",
-      "home": "CPV",
-      "away": "URU"
+      "group": "I",
+      "venue": "9"
     },
     {
       "id": 63,
+      "home": "EGY",
+      "away": "IRN",
+      "date": "2026-06-27",
+      "time": "04:00",
       "stage": "group",
       "group": "G",
-      "date": "2026-06-27",
-      "time": "20:00",
-      "venue": "vancouver",
-      "home": "NZL",
-      "away": "BEL"
+      "venue": "14"
     },
     {
       "id": 64,
+      "home": "NZL",
+      "away": "BEL",
+      "date": "2026-06-27",
+      "time": "04:00",
       "stage": "group",
       "group": "G",
-      "date": "2026-06-27",
-      "time": "20:00",
-      "venue": "seattle",
-      "home": "EGY",
-      "away": "IRN"
+      "venue": "13"
     },
     {
       "id": 65,
-      "stage": "group",
-      "group": "I",
+      "home": "CPV",
+      "away": "KSA",
       "date": "2026-06-27",
-      "time": "23:00",
-      "venue": "new_york",
-      "home": "FRA",
-      "away": "NOR"
+      "time": "03:00",
+      "stage": "group",
+      "group": "H",
+      "venue": "5"
     },
     {
       "id": 66,
-      "stage": "group",
-      "group": "I",
+      "home": "URU",
+      "away": "ESP",
       "date": "2026-06-27",
-      "time": "23:00",
-      "venue": "boston",
-      "home": "SEN",
-      "away": "IRQ"
+      "time": "02:00",
+      "stage": "group",
+      "group": "H",
+      "venue": "2"
     },
     {
       "id": 67,
+      "home": "PAN",
+      "away": "ENG",
+      "date": "2026-06-28",
+      "time": "01:00",
       "stage": "group",
       "group": "L",
-      "date": "2026-06-28",
-      "time": "02:00",
-      "venue": "dallas",
-      "home": "ENG",
-      "away": "GHA"
+      "venue": "11"
     },
     {
       "id": 68,
+      "home": "CRO",
+      "away": "GHA",
+      "date": "2026-06-28",
+      "time": "01:00",
       "stage": "group",
       "group": "L",
-      "date": "2026-06-28",
-      "time": "02:00",
-      "venue": "kansas_city",
-      "home": "CRO",
-      "away": "PAN"
+      "venue": "10"
     },
     {
       "id": 69,
+      "home": "ALG",
+      "away": "AUT",
+      "date": "2026-06-28",
+      "time": "05:00",
       "stage": "group",
       "group": "J",
-      "date": "2026-06-27",
-      "time": "23:00",
-      "venue": "kansas_city",
-      "home": "ALG",
-      "away": "AUT"
+      "venue": "6"
     },
     {
       "id": 70,
+      "home": "JOR",
+      "away": "ARG",
+      "date": "2026-06-28",
+      "time": "05:00",
       "stage": "group",
       "group": "J",
-      "date": "2026-06-27",
-      "time": "23:00",
-      "venue": "dallas",
-      "home": "JOR",
-      "away": "ARG"
+      "venue": "4"
     },
     {
       "id": 71,
+      "home": "COL",
+      "away": "POR",
+      "date": "2026-06-28",
+      "time": "03:30",
       "stage": "group",
       "group": "K",
-      "date": "2026-06-28",
-      "time": "02:00",
-      "venue": "miami",
-      "home": "COL",
-      "away": "COD"
+      "venue": "8"
     },
     {
       "id": 72,
+      "home": "COD",
+      "away": "UZB",
+      "date": "2026-06-28",
+      "time": "03:30",
       "stage": "group",
       "group": "K",
-      "date": "2026-06-28",
-      "time": "02:00",
-      "venue": "houston",
-      "home": "UZB",
-      "away": "POR"
+      "venue": "7"
     },
     {
       "id": 73,
-      "stage": "r32",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-06-28",
       "time": "20:00",
-      "venue": "los_angeles",
-      "home": "1A",
-      "away": "2B",
-      "label": "R32 - Partido 1"
+      "stage": "r32",
+      "group": "R32",
+      "venue": "16"
     },
     {
       "id": 74,
+      "home": "0",
+      "away": "0",
+      "date": "2026-06-30",
+      "time": "00:30",
       "stage": "r32",
-      "group": null,
-      "date": "2026-06-29",
-      "time": "20:00",
-      "venue": "mexico_city",
-      "home": "1C",
-      "away": "2D",
-      "label": "R32 - Partido 2"
+      "group": "R32",
+      "venue": "9"
     },
     {
       "id": 75,
+      "home": "0",
+      "away": "0",
+      "date": "2026-06-30",
+      "time": "03:00",
       "stage": "r32",
-      "group": null,
-      "date": "2026-06-29",
-      "time": "23:00",
-      "venue": "new_york",
-      "home": "1H",
-      "away": "2J",
-      "label": "R32 - Partido 3"
+      "group": "R32",
+      "venue": "3"
     },
     {
       "id": 76,
-      "stage": "r32",
-      "group": null,
-      "date": "2026-06-30",
+      "home": "0",
+      "away": "0",
+      "date": "2026-06-29",
       "time": "20:00",
-      "venue": "dallas",
-      "home": "1F",
-      "away": "2C",
-      "label": "R32 - Partido 4"
+      "stage": "r32",
+      "group": "R32",
+      "venue": "5"
     },
     {
       "id": 77,
+      "home": "0",
+      "away": "0",
+      "date": "2026-06-31",
+      "time": "01:00",
       "stage": "r32",
-      "group": null,
-      "date": "2026-06-30",
-      "time": "23:00",
-      "venue": "houston",
-      "home": "1E",
-      "away": "2I",
-      "label": "R32 - Partido 5"
+      "group": "R32",
+      "venue": "11"
     },
     {
       "id": 78,
-      "stage": "r32",
-      "group": null,
-      "date": "2026-07-01",
+      "home": "0",
+      "away": "0",
+      "date": "2026-06-30",
       "time": "20:00",
-      "venue": "kansas_city",
-      "home": "1D",
-      "away": "2G",
-      "label": "R32 - Partido 6"
+      "stage": "r32",
+      "group": "R32",
+      "venue": "4"
     },
     {
       "id": 79,
+      "home": "0",
+      "away": "0",
+      "date": "2026-06-31",
+      "time": "03:00",
       "stage": "r32",
-      "group": null,
-      "date": "2026-07-01",
-      "time": "23:00",
-      "venue": "atlanta",
-      "home": "1G",
-      "away": "3 ABCDF",
-      "label": "R32 - Partido 7"
+      "group": "R32",
+      "venue": "1"
     },
     {
       "id": 80,
-      "stage": "r32",
-      "group": null,
-      "date": "2026-07-02",
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-01",
       "time": "20:00",
-      "venue": "boston",
-      "home": "1K",
-      "away": "2L",
-      "label": "R32 - Partido 8"
+      "stage": "r32",
+      "group": "R32",
+      "venue": "7"
     },
     {
       "id": 81,
-      "stage": "r32",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-02",
-      "time": "23:00",
-      "venue": "miami",
-      "home": "1B",
-      "away": "2A",
-      "label": "R32 - Partido 9"
+      "time": "01:00",
+      "stage": "r32",
+      "group": "R32",
+      "venue": "15"
     },
     {
       "id": 82,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-01",
+      "time": "21:00",
       "stage": "r32",
-      "group": null,
-      "date": "2026-07-03",
-      "time": "20:00",
-      "venue": "vancouver",
-      "home": "1J",
-      "away": "2H",
-      "label": "R32 - Partido 10"
+      "group": "R32",
+      "venue": "14"
     },
     {
       "id": 83,
-      "stage": "r32",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-03",
-      "time": "23:00",
-      "venue": "toronto",
-      "home": "1L",
-      "away": "2K",
-      "label": "R32 - Partido 11"
+      "time": "03:00",
+      "stage": "r32",
+      "group": "R32",
+      "venue": "12"
     },
     {
       "id": 84,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-02",
+      "time": "20:00",
       "stage": "r32",
-      "group": null,
-      "date": "2026-07-03",
-      "time": "23:00",
-      "venue": "guadalajara",
-      "home": "1I",
-      "away": "3 CDFGH",
-      "label": "R32 - Partido 12"
+      "group": "R32",
+      "venue": "16"
     },
     {
       "id": 85,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-03",
+      "time": "04:00",
       "stage": "r32",
-      "group": null,
-      "date": "2026-07-02",
-      "time": "02:00",
-      "venue": "new_york",
-      "home": "1A",
-      "away": "3 CEFI",
-      "label": "R32 - Partido 13"
+      "group": "R32",
+      "venue": "13"
     },
     {
       "id": 86,
-      "stage": "r32",
-      "group": null,
-      "date": "2026-07-01",
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-04",
       "time": "02:00",
-      "venue": "monterrey",
-      "home": "2E",
-      "away": "3 BEFIJ",
-      "label": "R32 - Partido 14"
+      "stage": "r32",
+      "group": "R32",
+      "venue": "8"
     },
     {
       "id": 87,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-04",
+      "time": "04:30",
       "stage": "r32",
-      "group": null,
-      "date": "2026-07-02",
-      "time": "20:00",
-      "venue": "san_francisco",
-      "home": "2K",
-      "away": "2L",
-      "label": "R32 - Partido 15"
+      "group": "R32",
+      "venue": "6"
     },
     {
       "id": 88,
-      "stage": "r32",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-03",
-      "time": "02:00",
-      "venue": "seattle",
-      "home": "2D",
-      "away": "2G",
-      "label": "R32 - Partido 16"
+      "time": "21:00",
+      "stage": "r32",
+      "group": "R32",
+      "venue": "4"
     },
     {
       "id": 89,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-05",
+      "time": "01:00",
       "stage": "r16",
-      "group": null,
-      "date": "2026-07-04",
-      "time": "20:00",
-      "venue": "new_york",
-      "home": "W73",
-      "away": "W74",
-      "label": "R16 - Partido 1"
+      "group": "R16",
+      "venue": "10"
     },
     {
       "id": 90,
-      "stage": "r16",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-04",
-      "time": "23:00",
-      "venue": "dallas",
-      "home": "W75",
-      "away": "W76",
-      "label": "R16 - Partido 2"
+      "time": "20:00",
+      "stage": "r16",
+      "group": "R16",
+      "venue": "5"
     },
     {
       "id": 91,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-06",
+      "time": "00:00",
       "stage": "r16",
-      "group": null,
-      "date": "2026-07-05",
-      "time": "20:00",
-      "venue": "mexico_city",
-      "home": "W77",
-      "away": "W78",
-      "label": "R16 - Partido 3"
+      "group": "R16",
+      "venue": "11"
     },
     {
       "id": 92,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-06",
+      "time": "02:00",
       "stage": "r16",
-      "group": null,
-      "date": "2026-07-05",
-      "time": "23:00",
-      "venue": "houston",
-      "home": "W79",
-      "away": "W80",
-      "label": "R16 - Partido 4"
+      "group": "R16",
+      "venue": "1"
     },
     {
       "id": 93,
-      "stage": "r16",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-06",
-      "time": "20:00",
-      "venue": "atlanta",
-      "home": "W83",
-      "away": "W84",
-      "label": "R16 - Partido 5"
+      "time": "22:00",
+      "stage": "r16",
+      "group": "R16",
+      "venue": "4"
     },
     {
       "id": 94,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-07",
+      "time": "01:00",
       "stage": "r16",
-      "group": null,
-      "date": "2026-07-06",
-      "time": "23:00",
-      "venue": "boston",
-      "home": "W85",
-      "away": "W86",
-      "label": "R16 - Partido 6"
+      "group": "R16",
+      "venue": "14"
     },
     {
       "id": 95,
-      "stage": "r16",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-07",
       "time": "20:00",
-      "venue": "los_angeles",
-      "home": "W81",
-      "away": "W82",
-      "label": "R16 - Partido 7"
+      "stage": "r16",
+      "group": "R16",
+      "venue": "7"
     },
     {
       "id": 96,
-      "stage": "r16",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-07",
-      "time": "23:00",
-      "venue": "vancouver",
-      "home": "W87",
-      "away": "W88",
-      "label": "R16 - Partido 8"
+      "time": "21:00",
+      "stage": "r16",
+      "group": "R16",
+      "venue": "13"
     },
     {
       "id": 97,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-10",
+      "time": "00:00",
       "stage": "qf",
-      "group": null,
-      "date": "2026-07-09",
-      "time": "20:00",
-      "venue": "mexico_city",
-      "home": "W89",
-      "away": "W90",
-      "label": "Cuartos - Partido 1"
+      "group": "QF",
+      "venue": "9"
     },
     {
       "id": 98,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-10",
+      "time": "20:00",
       "stage": "qf",
-      "group": null,
-      "date": "2026-07-09",
-      "time": "23:00",
-      "venue": "atlanta",
-      "home": "W91",
-      "away": "W92",
-      "label": "Cuartos - Partido 2"
+      "group": "QF",
+      "venue": "16"
     },
     {
       "id": 99,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-12",
+      "time": "01:00",
       "stage": "qf",
-      "group": null,
-      "date": "2026-07-10",
-      "time": "20:00",
-      "venue": "houston",
-      "home": "W93",
-      "away": "W94",
-      "label": "Cuartos - Partido 3"
+      "group": "QF",
+      "venue": "8"
     },
     {
       "id": 100,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-12",
+      "time": "04:00",
       "stage": "qf",
-      "group": null,
-      "date": "2026-07-10",
-      "time": "23:00",
-      "venue": "kansas_city",
-      "home": "W95",
-      "away": "W96",
-      "label": "Cuartos - Partido 4"
+      "group": "QF",
+      "venue": "6"
     },
     {
       "id": 101,
-      "stage": "sf",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-14",
-      "time": "21:00",
-      "venue": "dallas",
-      "home": "W97",
-      "away": "W98",
-      "label": "Semifinal 1"
+      "time": "22:00",
+      "stage": "sf",
+      "group": "SF",
+      "venue": "4"
     },
     {
       "id": 102,
-      "stage": "sf",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-15",
-      "time": "21:00",
-      "venue": "miami",
-      "home": "W99",
-      "away": "W100",
-      "label": "Semifinal 2"
+      "time": "23:00",
+      "stage": "sf",
+      "group": "SF",
+      "venue": "7"
     },
     {
       "id": 103,
+      "home": "0",
+      "away": "0",
+      "date": "2026-07-19",
+      "time": "01:00",
       "stage": "third",
-      "group": null,
-      "date": "2026-07-18",
-      "time": "21:00",
-      "venue": "miami",
-      "home": "L101",
-      "away": "L102",
-      "label": "Tercer Puesto"
+      "group": "3RD",
+      "venue": "8"
     },
     {
       "id": 104,
-      "stage": "final",
-      "group": null,
+      "home": "0",
+      "away": "0",
       "date": "2026-07-19",
-      "time": "18:00",
-      "venue": "new_york",
-      "home": "W101",
-      "away": "W102",
-      "label": "FINAL"
+      "time": "23:00",
+      "stage": "final",
+      "group": "FINAL",
+      "venue": "11"
     }
-  ]
+  ],
+  "venues": {
+    "1": {
+      "name": "Estadio Azteca",
+      "city": "Mexico City"
+    },
+    "2": {
+      "name": "Estadio Akron",
+      "city": "Guadalajara"
+    },
+    "3": {
+      "name": "Estadio BBVA",
+      "city": "Monterrey"
+    },
+    "4": {
+      "name": "AT&T Stadium",
+      "city": "Dallas"
+    },
+    "5": {
+      "name": "SoFi Stadium",
+      "city": "Los Angeles"
+    },
+    "6": {
+      "name": "Hard Rock Stadium",
+      "city": "Miami"
+    },
+    "7": {
+      "name": "Mercedes-Benz Stadium",
+      "city": "Atlanta"
+    },
+    "8": {
+      "name": "NRG Stadium",
+      "city": "Houston"
+    },
+    "9": {
+      "name": "Lincoln Financial Field",
+      "city": "Philadelphia"
+    },
+    "10": {
+      "name": "Levi's Stadium",
+      "city": "San Francisco"
+    },
+    "11": {
+      "name": "Lumen Field",
+      "city": "Seattle"
+    },
+    "12": {
+      "name": "Gillette Stadium",
+      "city": "Boston"
+    },
+    "13": {
+      "name": "Arrowhead Stadium",
+      "city": "Kansas City"
+    },
+    "14": {
+      "name": "BC Place",
+      "city": "Vancouver"
+    },
+    "15": {
+      "name": "BMO Field",
+      "city": "Toronto"
+    },
+    "16": {
+      "name": "MetLife Stadium",
+      "city": "East Rutherford"
+    }
+  }
 }

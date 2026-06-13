@@ -78,6 +78,8 @@ function switchSection(section) {
 function renderCurrentSection() {
   if (currentSection === 'matches') {
     renderMatches();
+  } else if (currentSection === 'predictions') {
+    renderPredictions();
   } else if (currentSection === 'bracket') {
     renderBracket();
   } else if (currentSection === 'standings') {
@@ -215,3 +217,27 @@ function showToast(message, type) {
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
+
+// Swipe gestures to switch tabs
+var swipeStartX = 0;
+var swipeStartY = 0;
+var swipeThreshold = 80;
+
+var tabOrder = ['matches', 'predictions', 'bracket', 'standings', 'topscorer', 'leaderboard'];
+
+document.addEventListener('touchstart', function(e) {
+  swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', function(e) {
+  var dx = e.changedTouches[0].clientX - swipeStartX;
+  var dy = e.changedTouches[0].clientY - swipeStartY;
+  if (Math.abs(dx) < swipeThreshold || Math.abs(dy) > Math.abs(dx)) return;
+  var idx = tabOrder.indexOf(currentSection);
+  if (dx < 0 && idx < tabOrder.length - 1) {
+    switchSection(tabOrder[idx + 1]);
+  } else if (dx > 0 && idx > 0) {
+    switchSection(tabOrder[idx - 1]);
+  }
+}, { passive: true });
