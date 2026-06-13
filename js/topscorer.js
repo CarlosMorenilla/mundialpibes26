@@ -67,29 +67,36 @@ function findPlayerByAPIName(apiName) {
   for (var i = 0; i < allPlayers.length; i++) {
     if (allPlayers[i].name.toLowerCase() === clean) return allPlayers[i];
   }
-  // Try last name match
-  var apiLastName = clean.split(/\s+/).pop();
+  // Extract surname from API name (last word, e.g. "R. Jiménez" -> "jiménez")
+  var apiParts = clean.split(/\s+/);
+  var apiSurname = apiParts[apiParts.length - 1].replace('.', '');
+  // Find candidates: players whose name contains the API surname
   var candidates = [];
   for (var j = 0; j < allPlayers.length; j++) {
-    if (allPlayers[j].lastName === apiLastName) {
-      candidates.push(allPlayers[j]);
+    var playerParts = allPlayers[j].name.toLowerCase().split(/\s+/);
+    for (var k = 0; k < playerParts.length; k++) {
+      if (playerParts[k] === apiSurname) {
+        candidates.push(allPlayers[j]);
+        break;
+      }
     }
   }
   if (candidates.length === 1) return candidates[0];
   if (candidates.length > 1) {
     // Try to match by initials
-    var apiParts = clean.split(/\s+/);
-    for (var k = 0; k < candidates.length; k++) {
-      var playerParts = candidates[k].name.toLowerCase().split(/\s+/);
+    for (var m = 0; m < candidates.length; m++) {
+      var cParts = candidates[m].name.toLowerCase().split(/\s+/);
       var match = true;
       for (var p = 0; p < apiParts.length - 1; p++) {
         var initial = apiParts[p].replace('.', '');
-        if (initial && playerParts[p] && playerParts[p][0] !== initial[0]) {
-          match = false;
-          break;
+        if (!initial) continue;
+        var found = false;
+        for (var q = 0; q < cParts.length; q++) {
+          if (cParts[q][0] === initial[0]) { found = true; break; }
         }
+        if (!found) { match = false; break; }
       }
-      if (match) return candidates[k];
+      if (match) return candidates[m];
     }
     return candidates[0];
   }
@@ -100,7 +107,7 @@ function parseScorerField(field, scorers) {
   if (!field || field === 'null') return;
   var items;
   if (typeof field === 'string') {
-    var cleaned = field.replace(/[{}]/g, '');
+    var cleaned = field.replace(/[{}\u201C\u201D\u2018\u2019]/g, '');
     if (!cleaned) return;
     items = cleaned.split(',');
   } else if (Array.isArray(field)) {
@@ -109,7 +116,7 @@ function parseScorerField(field, scorers) {
     return;
   }
   for (var i = 0; i < items.length; i++) {
-    var item = items[i].trim().replace(/^"|"$/g, '');
+    var item = items[i].trim().replace(/^["'""'']|[""""'']$/g, '');
     if (!item) continue;
     var match = item.match(/^(.+?)\s+(\d+[\'+]*(?:\(OG\))?)$/);
     if (match) {
