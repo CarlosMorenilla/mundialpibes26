@@ -31,6 +31,10 @@ function getLastName(name) {
 }
 
 function loadScorersFromAPI() {
+  // Reset all goals first
+  for (var r = 0; r < allPlayers.length; r++) {
+    allPlayers[r].goals = 0;
+  }
   return fetch(WORLDCUP_API + '/get/games')
     .then(function(r) { return r.ok ? r.json() : {games:[]}; })
     .then(function(data) {
