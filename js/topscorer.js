@@ -193,25 +193,27 @@ function renderTopScorer() {
     var flag = myTopScorer.team ? getFlagImg(myTopScorer.team, 28) : '';
     html += '<div class="topscorer-current">';
     html += '<div class="topscorer-current-label">Tu prediccion (maximo goleador = 5 pts)</div>';
-    html += '<div class="topscorer-current-card">';
+    html += '<div class="topscorer-current-card locked">';
     html += '<div class="topscorer-avatar topscorer-avatar-placeholder">' + myTopScorer.name.charAt(0).toUpperCase() + '</div>';
     html += '<div class="topscorer-info">';
     html += '<div class="topscorer-name">' + myTopScorer.name + '</div>';
     html += '<div class="topscorer-meta">' + flag + (myTopScorer.team ? ' ' + getTeamShortName(myTopScorer.team) : '') + '</div>';
     html += '</div>';
-    html += '<button class="btn btn-sm" onclick="clearTopScorer()" style="margin-left:auto;">Cambiar</button>';
-    html += '</div></div>';
+    html += '<div class="topscorer-locked-icon">🔒</div>';
+    html += '</div>';
+    html += '<div class="topscorer-locked-text">Este jugador ya esta bloqueado como tu goleador. No se puede cambiar.</div>';
+    html += '</div>';
+  } else {
+    html += '<div class="topscorer-search">';
+    html += '<div class="topscorer-search-row">';
+    html += '<span class="topscorer-search-icon">🔍</span>';
+    html += '<input type="text" id="topscorer-input" placeholder="Buscar jugador..." autocomplete="off" oninput="filterScorers()">';
+    html += '</div>';
+    html += '<div id="topscorer-results" class="topscorer-results" style="display:none;"></div>';
+    html += '</div>';
   }
 
-  html += '<div class="topscorer-search">';
-  html += '<div class="topscorer-search-row">';
-  html += '<span class="topscorer-search-icon">🔍</span>';
-  html += '<input type="text" id="topscorer-input" placeholder="Buscar jugador..." autocomplete="off" oninput="filterScorers()">';
-  html += '</div>';
-  html += '<div id="topscorer-results" class="topscorer-results" style="display:none;"></div>';
-  html += '</div>';
-
-  html += '<div class="topscorer-section-title">Clasificacion de goleadores</div>';
+  html += '<div class="topscorer-section-title">' + (myTopScorer ? 'Clasificacion de goleadores' : 'Selecciona tu goleador') + '</div>';
   html += '<div id="topscorer-list" class="topscorer-leaderboard">';
   html += renderScorerLeaderboard('');
   html += '</div>';
@@ -300,13 +302,39 @@ function filterScorers() {
 }
 
 function selectFromSearch(name, team) {
+  if (myTopScorer) return;
   var input = document.getElementById('topscorer-input');
   var resultsDiv = document.getElementById('topscorer-results');
   if (input) input.value = '';
   if (resultsDiv) resultsDiv.style.display = 'none';
-  saveTopScorer(name, team);
+  confirmTopScorer(name, team);
 }
 
 function quickSelectScorer(name, team) {
+  if (myTopScorer) return;
+  confirmTopScorer(name, team);
+}
+
+function confirmTopScorer(name, team) {
+  var flag = team ? getFlagImg(team, 24) : '';
+  var msg = flag + ' <strong>' + name + '</strong><br><br>';
+  msg += '¿Seguro que quieres que este sea tu goleador?<br>';
+  msg += '<span style="color:var(--danger);font-weight:600;">Esta accion no se puede deshacer una vez elegida.</span>';
+
+  var overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = '<div class="modal-box">' +
+    '<div class="modal-title">Confirmar goleador</div>' +
+    '<div class="modal-body">' + msg + '</div>' +
+    '<div class="modal-actions">' +
+    '<button class="btn btn-secondary" onclick="this.closest(\'.modal-overlay\').remove()">Cancelar</button>' +
+    '<button class="btn btn-primary" onclick="confirmAndSave(\'' + name.replace(/'/g, "\\'") + '\', \'' + (team || '').replace(/'/g, "\\'") + '\')">Confirmar</button>' +
+    '</div></div>';
+  document.body.appendChild(overlay);
+}
+
+function confirmAndSave(name, team) {
+  var overlay = document.querySelector('.modal-overlay');
+  if (overlay) overlay.remove();
   saveTopScorer(name, team);
 }
