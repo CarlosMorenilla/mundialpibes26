@@ -101,6 +101,9 @@ function processAPIGames(games) {
     saveResults();
     renderCurrentSection();
     buildLeaderboard();
+    loadScorersFromAPI().then(function() {
+      if (currentSection === 'topscorer') renderTopScorer();
+    });
   } else {
     saveResults();
     if (Object.keys(liveMatches).length > 0) {
