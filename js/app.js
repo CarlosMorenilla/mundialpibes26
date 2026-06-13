@@ -58,6 +58,7 @@ function switchSection(section) {
   for (var i = 0; i < tabs.length; i++) {
     if (tabs[i].getAttribute('data-section') === section) {
       tabs[i].classList.add('active');
+      tabs[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     } else {
       tabs[i].classList.remove('active');
     }
@@ -73,13 +74,14 @@ function switchSection(section) {
   }
 
   renderCurrentSection();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function renderCurrentSection() {
   if (currentSection === 'matches') {
     renderMatches();
   } else if (currentSection === 'predictions') {
-    renderPredictions();
+    renderPredictionsView();
   } else if (currentSection === 'bracket') {
     renderBracket();
   } else if (currentSection === 'standings') {
@@ -223,7 +225,7 @@ var swipeStartX = 0;
 var swipeStartY = 0;
 var swipeThreshold = 80;
 
-var tabOrder = ['matches', 'predictions', 'bracket', 'standings', 'topscorer', 'leaderboard'];
+var tabOrder = ['matches', 'predictions', 'leaderboard', 'standings', 'bracket', 'topscorer'];
 
 document.addEventListener('touchstart', function(e) {
   swipeStartX = e.touches[0].clientX;
