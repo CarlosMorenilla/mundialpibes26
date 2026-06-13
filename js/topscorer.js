@@ -2,7 +2,6 @@
 
 var myTopScorer = null;
 var allPlayers = [];
-var tournamentScorers = {};
 
 function loadAllPlayers() {
   return fetch('/data/players.json')
@@ -16,7 +15,7 @@ function loadAllPlayers() {
         var players = team.players || [];
         for (var j = 0; j < players.length; j++) {
           var name = players[j].replace(/\s*\(captain\)/i, '').trim();
-          allPlayers.push({ name: name, team: code, goals: 0 });
+          allPlayers.push({ name: name, team: code, goals: 0, lastName: getLastName(name) });
         }
       }
       console.log('[TopScorer] Loaded', allPlayers.length, 'real players');
@@ -26,33 +25,78 @@ function loadAllPlayers() {
     });
 }
 
+function getLastName(name) {
+  var parts = name.split(/\s+/);
+  return parts[parts.length - 1].toLowerCase();
+}
+
 function loadScorersFromAPI() {
   return fetch(WORLDCUP_API + '/get/games')
     .then(function(r) { return r.ok ? r.json() : {games:[]}; })
     .then(function(data) {
       var games = data.games || [];
-      tournamentScorers = {};
+      var apiScorers = {};
       for (var i = 0; i < games.length; i++) {
         var g = games[i];
-        parseScorerField(g.home_scorers, g.home_team_name_en);
-        parseScorerField(g.away_scorers, g.away_team_name_en);
+        parseScorerField(g.home_scorers, apiScorers);
+        parseScorerField(g.away_scorers, apiScorers);
       }
-      // Update goals in allPlayers
-      var names = Object.keys(tournamentScorers);
-      for (var j = 0; j < allPlayers.length; j++) {
-        var p = allPlayers[j];
-        if (tournamentScorers[p.name]) {
-          p.goals = tournamentScorers[p.name].goals;
+      // Match API scorers to real players
+      var apiNames = Object.keys(apiScorers);
+      for (var j = 0; j < apiNames.length; j++) {
+        var apiName = apiNames[j];
+        var goals = apiScorers[apiName];
+        var matched = findPlayerByAPIName(apiName);
+        if (matched) {
+          matched.goals += goals;
+          console.log('[TopScorer] Matched:', apiName, '->', matched.name, '(' + matched.goals + ' goals)');
+        } else {
+          console.log('[TopScorer] No match for:', apiName);
         }
       }
-      console.log('[TopScorer] Found', names.length, 'scorers from API');
+      console.log('[TopScorer] Matched scorers from API');
     })
     .catch(function(e) {
       console.log('[TopScorer] API error:', e);
     });
 }
 
-function parseScorerField(field) {
+function findPlayerByAPIName(apiName) {
+  var clean = apiName.trim().toLowerCase();
+  // Try exact match first
+  for (var i = 0; i < allPlayers.length; i++) {
+    if (allPlayers[i].name.toLowerCase() === clean) return allPlayers[i];
+  }
+  // Try last name match
+  var apiLastName = clean.split(/\s+/).pop();
+  var candidates = [];
+  for (var j = 0; j < allPlayers.length; j++) {
+    if (allPlayers[j].lastName === apiLastName) {
+      candidates.push(allPlayers[j]);
+    }
+  }
+  if (candidates.length === 1) return candidates[0];
+  if (candidates.length > 1) {
+    // Try to match by initials
+    var apiParts = clean.split(/\s+/);
+    for (var k = 0; k < candidates.length; k++) {
+      var playerParts = candidates[k].name.toLowerCase().split(/\s+/);
+      var match = true;
+      for (var p = 0; p < apiParts.length - 1; p++) {
+        var initial = apiParts[p].replace('.', '');
+        if (initial && playerParts[p] && playerParts[p][0] !== initial[0]) {
+          match = false;
+          break;
+        }
+      }
+      if (match) return candidates[k];
+    }
+    return candidates[0];
+  }
+  return null;
+}
+
+function parseScorerField(field, scorers) {
   if (!field || field === 'null') return;
   var items;
   if (typeof field === 'string') {
@@ -67,13 +111,11 @@ function parseScorerField(field) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i].trim().replace(/^"|"$/g, '');
     if (!item) continue;
-    var match = item.match(/^(.+?)\s+(\d+[\'+]*)$/);
+    var match = item.match(/^(.+?)\s+(\d+[\'+]*(?:\(OG\))?)$/);
     if (match) {
       var name = match[1].trim();
-      if (!tournamentScorers[name]) {
-        tournamentScorers[name] = { goals: 0 };
-      }
-      tournamentScorers[name].goals++;
+      if (!scorers[name]) scorers[name] = 0;
+      scorers[name]++;
     }
   }
 }
@@ -149,7 +191,6 @@ function renderTopScorer() {
   html += '<input type="text" id="topscorer-input" placeholder="Buscar jugador..." autocomplete="off" oninput="filterScorers()">';
   html += '</div>';
   html += '<div id="topscorer-results" class="topscorer-results" style="display:none;"></div>';
-  html += '<button class="btn btn-primary" onclick="submitTopScorer()" style="margin-top:8px;width:100%;">Guardar</button>';
   html += '</div>';
 
   html += '<div class="topscorer-section-title">Clasificacion de goleadores</div>';
@@ -190,8 +231,6 @@ function renderScorerLeaderboard(filter) {
 
   if (count === 0) {
     html += '<div class="topscorer-rank-empty">No se encontraron jugadores</div>';
-  } else if (filter && count > 0) {
-    html += '<div class="topscorer-rank-empty">Mostrando ' + count + ' resultados</div>';
   }
 
   return html;
@@ -236,8 +275,7 @@ function filterScorers() {
     resultsDiv.innerHTML = html;
     resultsDiv.style.display = 'block';
   } else {
-    resultsDiv.innerHTML = '<div class="topscorer-result-item" onclick="submitTopScorer()">Añadir "' + val + '" como goleador</div>';
-    resultsDiv.style.display = 'block';
+    resultsDiv.style.display = 'none';
   }
 
   listDiv.innerHTML = renderScorerLeaderboard(val);
@@ -246,27 +284,9 @@ function filterScorers() {
 function selectFromSearch(name, team) {
   var input = document.getElementById('topscorer-input');
   var resultsDiv = document.getElementById('topscorer-results');
-  if (input) input.value = name;
+  if (input) input.value = '';
   if (resultsDiv) resultsDiv.style.display = 'none';
   saveTopScorer(name, team);
-}
-
-function submitTopScorer() {
-  var input = document.getElementById('topscorer-input');
-  if (!input) return;
-  var name = input.value.trim();
-  if (name.length < 2) {
-    showToast('Escribe un nombre', 'error');
-    return;
-  }
-  var found = null;
-  for (var i = 0; i < allPlayers.length; i++) {
-    if (allPlayers[i].name.toLowerCase() === name.toLowerCase()) {
-      found = allPlayers[i];
-      break;
-    }
-  }
-  saveTopScorer(name, found ? found.team : null);
 }
 
 function quickSelectScorer(name, team) {
