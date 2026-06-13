@@ -118,6 +118,7 @@ function parseScorerField(field, scorers) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i].trim().replace(/^["'""'']|[""""'']$/g, '');
     if (!item) continue;
+    if (item.indexOf('(OG)') !== -1) continue;
     var match = item.match(/^(.+?)\s+(\d+[\'+]*(?:\(OG\))?)$/);
     if (match) {
       var name = match[1].trim();
