@@ -18,19 +18,34 @@ function buildLeaderboard() {
     return;
   }
 
-  supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score')
-    .then(function(result) {
-      aggregateFromDB(result.data || []);
-      leaderboardLoading = false;
-      renderLeaderboard('leaderboardContainer');
-    }).catch(function() {
-      leaderboardLoading = false;
-      renderLeaderboard('leaderboardContainer');
-    });
+  Promise.all([
+    supabase.from('predictions').select('user_id, user_name, match_id, home_score, away_score'),
+    supabase.from('top_scorer_predictions').select('user_id, user_name, player_name')
+  ]).then(function(results) {
+    var predictions = results[0].data || [];
+    var topScorerPreds = results[1].data || [];
+    aggregateFromDB(predictions, topScorerPreds);
+    leaderboardLoading = false;
+    renderLeaderboard('leaderboardContainer');
+  }).catch(function() {
+    leaderboardLoading = false;
+    renderLeaderboard('leaderboardContainer');
+  });
 }
 
-function aggregateFromDB(predictions) {
+function getRealTopScorer() {
+  var sorted = allPlayers.slice().sort(function(a, b) {
+    return b.goals - a.goals;
+  });
+  if (sorted.length > 0 && sorted[0].goals > 0) {
+    return sorted[0];
+  }
+  return null;
+}
+
+function aggregateFromDB(predictions, topScorerPreds) {
   var byName = {};
+  var realTopScorer = getRealTopScorer();
 
   for (var i = 0; i < predictions.length; i++) {
     var pred = predictions[i];
@@ -45,6 +60,8 @@ function aggregateFromDB(predictions) {
         correctWinners: 0,
         exactScores: 0,
         totalPredictions: 0,
+        topScorerPoints: 0,
+        topScorerName: '',
         isMe: false
       };
     }
@@ -64,9 +81,30 @@ function aggregateFromDB(predictions) {
     }
   }
 
+  // Process top scorer predictions
+  for (var j = 0; j < topScorerPreds.length; j++) {
+    var tsp = topScorerPreds[j];
+    var tname = (tsp.user_name || '').trim().toLowerCase();
+    if (!tname || !byName[tname]) continue;
+
+    byName[tname].topScorerName = tsp.player_name;
+
+    // Check if the final has been played and this player is the top scorer
+    var finalMatch = getMatchByStage('final');
+    if (finalMatch) {
+      var finalResult = getResult(finalMatch.id);
+      if (finalResult && finalResult.status === 'finished' && realTopScorer) {
+        if (tsp.player_name.toLowerCase() === realTopScorer.name.toLowerCase()) {
+          byName[tname].topScorerPoints = APP_CONFIG.points.topScorer;
+          byName[tname].totalPoints += APP_CONFIG.points.topScorer;
+        }
+      }
+    }
+  }
+
   var keys = Object.keys(byName);
-  for (var j = 0; j < keys.length; j++) {
-    leaderboardData.push(byName[keys[j]]);
+  for (var k = 0; k < keys.length; k++) {
+    leaderboardData.push(byName[keys[k]]);
   }
 
   leaderboardData.sort(function(a, b) {
@@ -75,6 +113,14 @@ function aggregateFromDB(predictions) {
     if (b.correctWinners !== a.correctWinners) return b.correctWinners - a.correctWinners;
     return b.totalPredictions - a.totalPredictions;
   });
+}
+
+function getMatchByStage(stage) {
+  if (!matchesData) return null;
+  for (var i = 0; i < matchesData.matches.length; i++) {
+    if (matchesData.matches[i].stage === stage) return matchesData.matches[i];
+  }
+  return null;
 }
 
 function renderLeaderboard(containerId) {
@@ -93,6 +139,7 @@ function renderLeaderboard(containerId) {
   html += '<div class="ranking-legend-items">';
   html += '<span class="ranking-legend-item"><span class="ranking-legend-dot" style="background:var(--success);"></span>Ganador = 1 punto</span>';
   html += '<span class="ranking-legend-item"><span class="ranking-legend-dot" style="background:var(--gold);"></span>Resultado exacto = 3 puntos</span>';
+  html += '<span class="ranking-legend-item"><span class="ranking-legend-dot" style="background:var(--orange);"></span>Max. goleador = 5 puntos *</span>';
   html += '</div></div>';
 
   html += '<div class="leaderboard-table">';
@@ -117,11 +164,18 @@ function renderLeaderboard(containerId) {
     if (isMe) rowClass += ' current-user';
     if (pos <= 3) rowClass += ' top-three';
 
+    var topScorerBadge = '';
+    if (user.topScorerPoints > 0) {
+      topScorerBadge = ' <span class="topscorer-badge" title="Acerto el maximo goleador: ' + user.topScorerName + '">⚽+5</span>';
+    } else if (user.topScorerName) {
+      topScorerBadge = ' <span class="topscorer-badge pending" title="Goleador: ' + user.topScorerName + '">⚽?</span>';
+    }
+
     html += '<div class="' + rowClass + '">';
     html += '<div class="leaderboard-pos ' + posClass + '">' + pos + '</div>';
     html += '<div class="leaderboard-user">';
     html += '<div class="leaderboard-avatar" style="background:' + (isMe ? 'var(--orange)' : 'var(--gradient-gold)') + ';display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;">' + user.name.charAt(0).toUpperCase() + '</div>';
-    html += '<span class="leaderboard-name">' + user.name + (isMe ? ' (tu)' : '') + '</span>';
+    html += '<span class="leaderboard-name">' + user.name + (isMe ? ' (tu)' : '') + topScorerBadge + '</span>';
     html += '</div>';
     html += '<div class="leaderboard-stats">';
     html += '<div class="leaderboard-stat"><div class="leaderboard-stat-value">' + user.totalPoints + '</div></div>';
@@ -132,5 +186,6 @@ function renderLeaderboard(containerId) {
   }
 
   html += '</div>';
+  html += '<div class="ranking-note">* Los puntos del maximo goleador (+5) se suman automaticamente cuando finaliza la final.</div>';
   container.innerHTML = html;
 }

@@ -1825,3 +1825,28 @@ body {
 .btn-secondary:hover {
   background: var(--border);
 }
+
+/* Top scorer badge in leaderboard */
+.topscorer-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  color: white;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.topscorer-badge.pending {
+  background: var(--warning);
+}
+
+.ranking-note {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-light);
+  margin-top: 12px;
+  font-style: italic;
+}
