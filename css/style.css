@@ -1672,6 +1672,10 @@ body {
   background: rgba(212,168,67,0.06);
 }
 
+.topscorer-rank-item.has-goals {
+  background: rgba(232,98,28,0.04);
+}
+
 .topscorer-rank-pos {
   width: 28px;
   height: 28px;
