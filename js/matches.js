@@ -82,11 +82,12 @@ function getStageLabel(stage) {
   return labels[stage] || stage;
 }
 
-function renderScorers(scorers) {
+function renderScorers(scorers, side) {
   if (!scorers || scorers.length === 0) return '';
-  var html = '<div class="scorers-list">';
+  var align = side === 'away' ? ' align-right' : '';
+  var html = '<div class="scorers-list' + align + '">';
   for (var i = 0; i < scorers.length; i++) {
-    html += '<span class="scorer-item">' + scorers[i] + '</span>';
+    html += '<span class="scorer-item">⚽ ' + scorers[i] + '</span>';
   }
   return html + '</div>';
 }
@@ -106,15 +107,14 @@ function renderMatchCard(match, result, prediction) {
   var scoreHome = result ? result.home_score : (prediction ? prediction.home_score : null);
   var scoreAway = result ? result.away_score : (prediction ? prediction.away_score : null);
 
-  var homeScorers = (result && result.home_scorers) ? renderScorers(result.home_scorers) : '';
-  var awayScorers = (result && result.away_scorers) ? renderScorers(result.away_scorers) : '';
+  var homeScorers = (result && result.home_scorers) ? renderScorers(result.home_scorers, 'home') : '';
+  var awayScorers = (result && result.away_scorers) ? renderScorers(result.away_scorers, 'away') : '';
 
   var actionsHTML = '';
 
   if (live) {
     actionsHTML = '<div class="match-actions">' +
       '<div class="live-badge">EN VIVO ' + (result.minute ? result.minute + "'" : '') + '</div>' +
-      homeScorers + awayScorers +
       (predicted ? '<div class="prediction-saved">Tu prediccion: ' + prediction.home_score + ' - ' + prediction.away_score + '</div>' : '') +
       '</div>';
   } else if (finished) {
@@ -127,7 +127,6 @@ function renderMatchCard(match, result, prediction) {
     }
     actionsHTML = '<div class="match-actions">' +
       '<div class="finished-badge">FINALIZADO</div>' +
-      homeScorers + awayScorers +
       (predicted ? '<div class="prediction-result">' +
         '<span class="prediction-result-label">Tu prediccion:</span> ' +
         '<span class="prediction-result-score">' + prediction.home_score + ' - ' + prediction.away_score + '</span>' +
@@ -170,6 +169,7 @@ function renderMatchCard(match, result, prediction) {
     '<div class="team">' +
     '<div class="team-flag">' + display.homeFlag + '</div>' +
     '<div class="team-name ' + (display.homePlaceholder ? 'team-name-placeholder' : '') + '">' + display.homeName + '</div>' +
+    homeScorers +
     '</div>' +
     '<div class="match-score">' +
     (scoreHome !== null ? '<span>' + scoreHome + '</span>' : '<span>-</span>') +
@@ -179,6 +179,7 @@ function renderMatchCard(match, result, prediction) {
     '<div class="team">' +
     '<div class="team-flag">' + display.awayFlag + '</div>' +
     '<div class="team-name ' + (display.awayPlaceholder ? 'team-name-placeholder' : '') + '">' + display.awayName + '</div>' +
+    awayScorers +
     '</div>' +
     '</div>' +
     (venueName ? '<div class="match-venue">' + venueName + '</div>' : '') +
