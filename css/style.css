@@ -567,6 +567,43 @@ body {
   margin-top: 8px;
 }
 
+.live-badge {
+  text-align: center;
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 0.85rem;
+  animation: pulse 1.5s infinite;
+}
+
+.finished-badge {
+  text-align: center;
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.scorers-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  margin-top: 4px;
+}
+
+.scorer-item {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  background: rgba(212,168,67,0.1);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 /* ============================================
    STAGE + GROUP FILTERS
    ============================================ */

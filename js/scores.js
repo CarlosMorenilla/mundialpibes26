@@ -1,4 +1,4 @@
-// MundialPibes26 - Actualizacion de resultados via API
+// MundialPibes26 - Actualizacion de resultados via worldcup26.ir API
 
 var matchResults = {};
 var liveMatches = {};
@@ -32,71 +32,64 @@ function saveResults() {
 }
 
 function fetchScores() {
-  var today = new Date().toISOString().split('T')[0];
-  var yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  var yesterdayStr = yesterday.toISOString().split('T')[0];
-
-  var urls = [
-    THESPORTSDB_API + '/eventsday.php?d=' + today + '&l=' + THESPORTSDB_LEAGUE_ID,
-    THESPORTSDB_API + '/eventsday.php?d=' + yesterdayStr + '&l=' + THESPORTSDB_LEAGUE_ID
-  ];
-
-  console.log('[Scores] Fetching today + yesterday');
-  Promise.all(urls.map(function(url) {
-    return fetch(url).then(function(r) { return r.ok ? r.json() : {events:null}; }).catch(function() { return {events:null}; });
-  })).then(function(results) {
-    var allEvents = [];
-    for (var i = 0; i < results.length; i++) {
-      if (results[i] && results[i].events) {
-        allEvents = allEvents.concat(results[i].events);
-      }
-    }
-    console.log('[Scores] Found', allEvents.length, 'total events');
-    if (allEvents.length > 0) {
-      processAPIEvents(allEvents);
-    }
-  });
+  console.log('[Scores] Fetching from worldcup26.ir...');
+  fetch(WORLDCUP_API + '/get/games')
+    .then(function(r) { return r.ok ? r.json() : {games:[]}; })
+    .then(function(data) {
+      var games = data.games || [];
+      console.log('[Scores] Found', games.length, 'games');
+      processAPIGames(games);
+    })
+    .catch(function(e) {
+      console.log('[Scores] API error:', e);
+    });
 }
 
-function processAPIEvents(events) {
+function parseScorers(scorersStr) {
+  if (!scorersStr || scorersStr === 'null') return [];
+  try {
+    if (typeof scorersStr === 'object') return scorersStr;
+    var cleaned = scorersStr.replace(/[{}]/g, '');
+    if (!cleaned) return [];
+    return cleaned.split(',').map(function(s) { return s.trim(); });
+  } catch(e) { return []; }
+}
+
+function processAPIGames(games) {
   var changed = false;
-  for (var i = 0; i < events.length; i++) {
-    var event = events[i];
-    var homeCode = findTeamCode(event.strHomeTeam);
-    var awayCode = findTeamCode(event.strAwayTeam);
-    if (!homeCode || !awayCode) {
-      console.log('[Scores] Could not map teams:', event.strHomeTeam, '->', homeCode, '|', event.strAwayTeam, '->', awayCode);
-      continue;
-    }
+  for (var i = 0; i < games.length; i++) {
+    var game = games[i];
+    var homeCode = findTeamCodeByName(game.home_team_name_en);
+    var awayCode = findTeamCodeByName(game.away_team_name_en);
+    if (!homeCode || !awayCode) continue;
 
     var match = findMatchByTeams(homeCode, awayCode);
-    if (!match) {
-      console.log('[Scores] No match found for', homeCode, 'vs', awayCode);
-      continue;
-    }
+    if (!match) continue;
 
-    var newStatus = mapStatus(event.strStatus || event.strProgress);
-    if (newStatus !== 'live' && newStatus !== 'finished') {
-      continue;
-    }
+    var newStatus = mapStatus(game.time_elapsed, game.finished);
+    if (newStatus !== 'live' && newStatus !== 'finished') continue;
 
     var oldResult = matchResults[match.id];
     var oldStatus = oldResult ? oldResult.status : null;
 
+    var homeScorers = parseScorers(game.home_scorers);
+    var awayScorers = parseScorers(game.away_scorers);
+
     var result = {
       match_id: match.id,
-      home_score: parseInt(event.intHomeScore) || 0,
-      away_score: parseInt(event.intAwayScore) || 0,
+      home_score: parseInt(game.home_score) || 0,
+      away_score: parseInt(game.away_score) || 0,
       status: newStatus,
-      minute: event.strProgress || null
+      minute: game.time_elapsed || null,
+      home_scorers: homeScorers,
+      away_scorers: awayScorers
     };
 
     matchResults[match.id] = result;
     if (newStatus === 'live') { liveMatches[match.id] = result; }
     else if (newStatus === 'finished') { delete liveMatches[match.id]; }
 
-    console.log('[Scores] Match', match.id, homeCode, 'vs', awayCode, ':', result.home_score, '-', result.away_score, '(' + newStatus + ')');
+    console.log('[Scores] Match', match.id, homeCode, 'vs', awayCode, ':', result.home_score, '-', result.away_score, '(' + newStatus + ')', 'Scorers:', homeScorers, awayScorers);
 
     if (oldStatus !== 'finished' && newStatus === 'finished') {
       changed = true;
@@ -108,10 +101,15 @@ function processAPIEvents(events) {
     saveResults();
     renderCurrentSection();
     buildLeaderboard();
+  } else {
+    saveResults();
+    if (Object.keys(liveMatches).length > 0) {
+      renderCurrentSection();
+    }
   }
 }
 
-function findTeamCode(teamName) {
+function findTeamCodeByName(teamName) {
   if (!teamName || !matchesData) return null;
   var lower = teamName.toLowerCase();
   var teams = matchesData.teams;
@@ -161,12 +159,13 @@ function findMatchByTeams(homeCode, awayCode) {
   return null;
 }
 
-function mapStatus(apiStatus) {
-  if (!apiStatus) return 'scheduled';
-  var s = apiStatus.toLowerCase();
-  if (s.indexOf('live') !== -1 || s.indexOf('1h') !== -1 || s.indexOf('2h') !== -1 || s.indexOf('ht') !== -1) return 'live';
-  if (s.indexOf('ft') !== -1 || s.indexOf('finished') !== -1 || s.indexOf('final') !== -1) return 'finished';
-  return 'scheduled';
+function mapStatus(timeElapsed, finished) {
+  if (finished === 'TRUE' || finished === true) return 'finished';
+  if (!timeElapsed) return 'scheduled';
+  var s = timeElapsed.toLowerCase();
+  if (s === 'notstarted' || s === 'scheduled') return 'scheduled';
+  if (s === 'finished' || s === 'ft') return 'finished';
+  return 'live';
 }
 
 function getResult(matchId) {

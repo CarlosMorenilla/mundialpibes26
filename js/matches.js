@@ -82,6 +82,15 @@ function getStageLabel(stage) {
   return labels[stage] || stage;
 }
 
+function renderScorers(scorers) {
+  if (!scorers || scorers.length === 0) return '';
+  var html = '<div class="scorers-list">';
+  for (var i = 0; i < scorers.length; i++) {
+    html += '<span class="scorer-item">' + scorers[i] + '</span>';
+  }
+  return html + '</div>';
+}
+
 function renderMatchCard(match, result, prediction) {
   var display = getMatchDisplay(match);
   var started = isMatchStarted(match);
@@ -97,11 +106,15 @@ function renderMatchCard(match, result, prediction) {
   var scoreHome = result ? result.home_score : (prediction ? prediction.home_score : null);
   var scoreAway = result ? result.away_score : (prediction ? prediction.away_score : null);
 
+  var homeScorers = (result && result.home_scorers) ? renderScorers(result.home_scorers) : '';
+  var awayScorers = (result && result.away_scorers) ? renderScorers(result.away_scorers) : '';
+
   var actionsHTML = '';
 
   if (live) {
     actionsHTML = '<div class="match-actions">' +
-      '<div style="text-align:center;color:var(--danger);font-weight:600;font-size:0.85rem;">EN VIVO ' + (result.minute ? result.minute + "'" : '') + '</div>' +
+      '<div class="live-badge">EN VIVO ' + (result.minute ? result.minute + "'" : '') + '</div>' +
+      homeScorers + awayScorers +
       (predicted ? '<div class="prediction-saved">Tu prediccion: ' + prediction.home_score + ' - ' + prediction.away_score + '</div>' : '') +
       '</div>';
   } else if (finished) {
@@ -113,7 +126,8 @@ function renderMatchCard(match, result, prediction) {
       else ptsLabel = 'No acertaste';
     }
     actionsHTML = '<div class="match-actions">' +
-      '<div style="text-align:center;color:var(--success);font-weight:600;font-size:0.85rem;">FINALIZADO</div>' +
+      '<div class="finished-badge">FINALIZADO</div>' +
+      homeScorers + awayScorers +
       (predicted ? '<div class="prediction-result">' +
         '<span class="prediction-result-label">Tu prediccion:</span> ' +
         '<span class="prediction-result-score">' + prediction.home_score + ' - ' + prediction.away_score + '</span>' +

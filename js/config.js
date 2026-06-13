@@ -11,6 +11,7 @@ if (typeof window !== 'undefined' && window.supabase && window.supabase.createCl
 
 var THESPORTSDB_API = 'https://www.thesportsdb.com/api/v1/json/3';
 var THESPORTSDB_LEAGUE_ID = '4429';
+var WORLDCUP_API = 'https://worldcup26.ir';
 
 var APP_CONFIG = {
   name: 'MundialPibes26',
