@@ -1763,6 +1763,33 @@ body {
   font-style: italic;
 }
 
+.topscorer-deadline-passed {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+
+.topscorer-deadline-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.topscorer-deadline-text {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.topscorer-deadline-sub {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;

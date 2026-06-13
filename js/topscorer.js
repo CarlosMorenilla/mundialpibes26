@@ -183,10 +183,16 @@ function clearTopScorer() {
   }
 }
 
+function isTopScorerDeadlinePassed() {
+  var deadline = new Date('2026-06-15T14:00:00+02:00');
+  return new Date() > deadline;
+}
+
 function renderTopScorer() {
   var container = document.getElementById('topscorerContainer');
   if (!container) return;
 
+  var deadlinePassed = isTopScorerDeadlinePassed();
   var html = '';
 
   if (myTopScorer) {
@@ -202,6 +208,12 @@ function renderTopScorer() {
     html += '<div class="topscorer-locked-icon">🔒</div>';
     html += '</div>';
     html += '<div class="topscorer-locked-text">Este jugador ya esta bloqueado como tu goleador. No se puede cambiar.</div>';
+    html += '</div>';
+  } else if (deadlinePassed) {
+    html += '<div class="topscorer-deadline-passed">';
+    html += '<div class="topscorer-deadline-icon">🔒</div>';
+    html += '<div class="topscorer-deadline-text">Plazo finalizado</div>';
+    html += '<div class="topscorer-deadline-sub">No se pueden hacer predicciones de maximo goleador. El plazo era hasta el lunes 15 de junio a las 14:00.</div>';
     html += '</div>';
   } else {
     html += '<div class="topscorer-search">';
@@ -302,7 +314,7 @@ function filterScorers() {
 }
 
 function selectFromSearch(name, team) {
-  if (myTopScorer) return;
+  if (myTopScorer || isTopScorerDeadlinePassed()) return;
   var input = document.getElementById('topscorer-input');
   var resultsDiv = document.getElementById('topscorer-results');
   if (input) input.value = '';
@@ -311,7 +323,7 @@ function selectFromSearch(name, team) {
 }
 
 function quickSelectScorer(name, team) {
-  if (myTopScorer) return;
+  if (myTopScorer || isTopScorerDeadlinePassed()) return;
   confirmTopScorer(name, team);
 }
 
