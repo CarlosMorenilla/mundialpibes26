@@ -34,7 +34,6 @@ function initApp() {
         startScorePolling();
         loadLeaderboard();
         loadMyTopScorer();
-        loadAllPlayers();
         allLoaded = true;
       });
     });
