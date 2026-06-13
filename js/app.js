@@ -12,9 +12,15 @@ function initApp() {
     currentUser = { id: 'test-user', user_metadata: { full_name: 'Test User' }, email: 'test@test.com' };
     loadMatches().then(function() {
       loadSavedResults();
-      renderCurrentSection();
       startScorePolling();
-      allLoaded = true;
+      loadAllPlayers().then(function() {
+        loadScorersFromAPI().then(function() {
+          loadMyTopScorer().then(function() {
+            allLoaded = true;
+            renderCurrentSection();
+          });
+        });
+      });
     });
     return;
   }
@@ -30,13 +36,14 @@ function initApp() {
     loadMatches().then(function() {
       loadSavedResults();
       loadPredictions().then(function() {
-        renderCurrentSection();
         startScorePolling();
         loadLeaderboard();
         loadAllPlayers().then(function() {
           loadScorersFromAPI().then(function() {
-            loadMyTopScorer();
-            allLoaded = true;
+            loadMyTopScorer().then(function() {
+              allLoaded = true;
+              renderCurrentSection();
+            });
           });
         });
       });

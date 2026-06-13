@@ -107,7 +107,7 @@ function parseScorerField(field, scorers) {
   if (!field || field === 'null') return;
   var items;
   if (typeof field === 'string') {
-    var cleaned = field.replace(/[{}\u201C\u201D\u2018\u2019]/g, '');
+    var cleaned = field.replace(/[\u201C\u201D\u2018\u2019{}]/g, '');
     if (!cleaned) return;
     items = cleaned.split(',');
   } else if (Array.isArray(field)) {
@@ -116,12 +116,14 @@ function parseScorerField(field, scorers) {
     return;
   }
   for (var i = 0; i < items.length; i++) {
-    var item = items[i].trim().replace(/^["'""'']|[""""'']$/g, '');
+    var item = items[i].trim().replace(/^[""'']|[""'']$/g, '');
     if (!item) continue;
     if (item.indexOf('(OG)') !== -1) continue;
-    var match = item.match(/^(.+?)\s+(\d+[\'+]*(?:\(OG\))?)$/);
-    if (match) {
-      var name = match[1].trim();
+    var lastSpace = item.lastIndexOf(' ');
+    if (lastSpace === -1) continue;
+    var name = item.substring(0, lastSpace).trim();
+    var minute = item.substring(lastSpace + 1).trim();
+    if (name && minute) {
       if (!scorers[name]) scorers[name] = 0;
       scorers[name]++;
     }
