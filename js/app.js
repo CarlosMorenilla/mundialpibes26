@@ -223,19 +223,27 @@ document.addEventListener('DOMContentLoaded', initApp);
 // Swipe gestures to switch tabs
 var swipeStartX = 0;
 var swipeStartY = 0;
-var swipeThreshold = 80;
+var swipeStartTime = 0;
+var swipeThreshold = 50;
+var swipeMaxTime = 500;
 
 var tabOrder = ['matches', 'predictions', 'leaderboard', 'standings', 'bracket', 'topscorer'];
 
 document.addEventListener('touchstart', function(e) {
   swipeStartX = e.touches[0].clientX;
   swipeStartY = e.touches[0].clientY;
+  swipeStartTime = Date.now();
 }, { passive: true });
 
 document.addEventListener('touchend', function(e) {
   var dx = e.changedTouches[0].clientX - swipeStartX;
   var dy = e.changedTouches[0].clientY - swipeStartY;
-  if (Math.abs(dx) < swipeThreshold || Math.abs(dy) > Math.abs(dx)) return;
+  var elapsed = Date.now() - swipeStartTime;
+
+  if (elapsed > swipeMaxTime) return;
+  if (Math.abs(dx) < swipeThreshold) return;
+  if (Math.abs(dy) > Math.abs(dx) * 1.2) return;
+
   var idx = tabOrder.indexOf(currentSection);
   if (dx < 0 && idx < tabOrder.length - 1) {
     switchSection(tabOrder[idx + 1]);
