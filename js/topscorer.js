@@ -189,7 +189,7 @@ function clearTopScorer() {
 }
 
 function isTopScorerDeadlinePassed() {
-  var deadline = new Date('2026-06-15T14:00:00+02:00');
+  var deadline = new Date('2026-06-16T23:59:00+02:00');
   return new Date() > deadline;
 }
 
@@ -218,7 +218,7 @@ function renderTopScorer() {
     html += '<div class="topscorer-deadline-passed">';
     html += '<div class="topscorer-deadline-icon">🔒</div>';
     html += '<div class="topscorer-deadline-text">Plazo finalizado</div>';
-    html += '<div class="topscorer-deadline-sub">No se pueden hacer predicciones de maximo goleador. El plazo era hasta el lunes 15 de junio a las 14:00.</div>';
+    html += '<div class="topscorer-deadline-sub">No se pueden hacer predicciones de maximo goleador. El plazo era hasta el martes 16 de junio a las 23:59.</div>';
     html += '</div>';
   } else {
     html += '<div class="topscorer-search">';
