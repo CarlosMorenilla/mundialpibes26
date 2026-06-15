@@ -225,12 +225,11 @@ function showToast(message, type) {
 
 document.addEventListener('DOMContentLoaded', initApp);
 
-// Swipe gestures - real-time sliding
+// Swipe gestures - translate active section
 var swipeStartX = 0;
 var swipeStartY = 0;
-var swipeDeltaX = 0;
 var swipeDragging = false;
-var swipeLocked = false;
+var swipeDirectionLocked = false;
 var tabOrder = ['matches', 'predictions', 'leaderboard', 'standings', 'bracket', 'topscorer'];
 
 function getSectionIndex(section) {
@@ -240,103 +239,119 @@ function getSectionIndex(section) {
   return -1;
 }
 
-function getSlider() {
-  return document.getElementById('sectionsSlider');
-}
-
-function setSliderOffset(offsetPx) {
-  var slider = getSlider();
-  if (!slider) return;
-  var sections = slider.querySelectorAll('.section');
-  var idx = getSectionIndex(currentSection);
-  for (var i = 0; i < sections.length; i++) {
-    var diff = i - idx;
-    sections[i].style.transform = 'translateX(' + (offsetPx + diff * 100) + '%)';
-  }
-}
-
 document.addEventListener('touchstart', function(e) {
   swipeStartX = e.touches[0].clientX;
   swipeStartY = e.touches[0].clientY;
-  swipeDeltaX = 0;
   swipeDragging = false;
-  swipeLocked = false;
+  swipeDirectionLocked = false;
 }, { passive: true });
 
 document.addEventListener('touchmove', function(e) {
   var dx = e.touches[0].clientX - swipeStartX;
   var dy = e.touches[0].clientY - swipeStartY;
 
-  if (!swipeLocked && !swipeDragging) {
+  if (!swipeDirectionLocked) {
     if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      swipeLocked = true;
+      swipeDirectionLocked = true;
       swipeDragging = true;
-      var slider = getSlider();
-      if (slider) slider.classList.add('sliding');
+      var activeEl = document.querySelector('.section.active');
+      if (activeEl) activeEl.classList.add('swiping');
     } else if (Math.abs(dy) > 8) {
-      swipeLocked = false;
+      swipeDirectionLocked = true;
       return;
     }
   }
 
   if (!swipeDragging) return;
 
-  swipeDeltaX = dx;
-  var pct = (dx / window.innerWidth) * 100;
+  var activeEl = document.querySelector('.section.active');
+  if (!activeEl) return;
+
   var idx = getSectionIndex(currentSection);
+  var pct = dx;
   if ((idx === 0 && dx > 0) || (idx === tabOrder.length - 1 && dx < 0)) {
-    pct = pct * 0.3;
+    pct = dx * 0.3;
   }
-  setSliderOffset(pct);
+  activeEl.style.transform = 'translateX(' + pct + 'px)';
+  activeEl.style.transition = 'none';
 }, { passive: true });
 
-document.addEventListener('touchend', function() {
+document.addEventListener('touchend', function(e) {
   if (!swipeDragging) return;
   swipeDragging = false;
 
-  var slider = getSlider();
-  if (slider) slider.classList.remove('sliding');
+  var dx = e.changedTouches[0].clientX - swipeStartX;
+  var activeEl = document.querySelector('.section.active');
+  if (!activeEl) return;
 
   var idx = getSectionIndex(currentSection);
-  var pct = (swipeDeltaX / window.innerWidth) * 100;
+  var threshold = window.innerWidth * 0.2;
 
-  if (pct < -15 && idx < tabOrder.length - 1) {
-    slideToSection(tabOrder[idx + 1]);
-  } else if (pct > 15 && idx > 0) {
-    slideToSection(tabOrder[idx - 1]);
+  if (dx < -threshold && idx < tabOrder.length - 1) {
+    animateSlide(activeEl, tabOrder[idx + 1], 'left');
+  } else if (dx > threshold && idx > 0) {
+    animateSlide(activeEl, tabOrder[idx - 1], 'right');
   } else {
-    slideToSection(currentSection);
+    activeEl.style.transition = 'transform 0.2s ease';
+    activeEl.style.transform = '';
+    setTimeout(function() {
+      activeEl.classList.remove('swiping');
+      activeEl.style.transition = '';
+      activeEl.style.transform = '';
+    }, 200);
   }
 }, { passive: true });
 
-function slideToSection(section) {
-  var slider = getSlider();
-  if (!slider) { switchSection(section); return; }
+function animateSlide(currentEl, newSection, direction) {
+  var outClass = direction === 'left' ? 'slide-out-left' : 'slide-out-right';
+  var inClass = direction === 'left' ? 'slide-in-right' : 'slide-in-left';
 
-  var targetIdx = getSectionIndex(section);
-  var currentIdx = getSectionIndex(currentSection);
-  var diff = targetIdx - currentIdx;
+  currentEl.classList.remove('swiping');
+  currentEl.classList.add(outClass);
+  currentEl.style.transform = '';
+  currentEl.style.transition = '';
 
-  if (diff === 0) {
-    setSliderOffset(0);
+  var newIdx = getSectionIndex(newSection);
+  var secs = document.querySelectorAll('.section');
+  var newEl = null;
+  for (var i = 0; i < secs.length; i++) {
+    if (secs[i].id === 'section-' + newSection) {
+      newEl = secs[i];
+      break;
+    }
+  }
+
+  if (!newEl) {
+    switchSection(newSection);
     return;
   }
 
-  slider.classList.add('animating');
-  var sections = slider.querySelectorAll('.section');
-  for (var i = 0; i < sections.length; i++) {
-    var sdiff = i - currentIdx;
-    sections[i].style.transform = 'translateX(' + ((diff - sdiff) * -100 + (diff * 100)) + '%)';
-  }
-  setSliderOffset(-diff * 100);
+  newEl.classList.add(inClass);
+  newEl.style.display = 'block';
+  newEl.style.opacity = '1';
+
+  requestAnimationFrame(function() {
+    newEl.classList.remove(inClass);
+    newEl.style.transform = '';
+    newEl.style.transition = 'transform 0.25s ease';
+    requestAnimationFrame(function() {
+      newEl.style.transform = '';
+    });
+  });
 
   setTimeout(function() {
-    slider.classList.remove('animating', 'sliding');
-    var allSections = slider.querySelectorAll('.section');
-    for (var j = 0; j < allSections.length; j++) {
-      allSections[j].style.transform = '';
-      allSections[j].style.position = '';
-    }
-    switchSection(section);
-  }, 260);
+    currentEl.classList.remove(outClass);
+    currentEl.style.display = '';
+    currentEl.style.opacity = '';
+    currentEl.style.transform = '';
+    currentEl.style.transition = '';
+
+    newEl.classList.remove(inClass);
+    newEl.style.display = '';
+    newEl.style.opacity = '';
+    newEl.style.transform = '';
+    newEl.style.transition = '';
+
+    switchSection(newSection);
+  }, 280);
 }
