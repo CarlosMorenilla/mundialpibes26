@@ -207,11 +207,15 @@ function loadAllTopScorerPicks() {
         nameMap[preds[i].user_id] = preds[i].user_name;
       }
     }
+    var seen = {};
     var out = [];
     for (var j = 0; j < picks.length; j++) {
+      var uid = picks[j].user_id;
+      if (seen[uid]) continue;
+      seen[uid] = true;
       out.push({
-        user_id: picks[j].user_id,
-        user_name: nameMap[picks[j].user_id] || 'Jugador',
+        user_id: uid,
+        user_name: nameMap[uid] || 'Jugador',
         player_name: picks[j].player_name,
         team_code: picks[j].team_code || ''
       });
@@ -264,13 +268,15 @@ function renderTopScorer() {
   html += renderScorerLeaderboard('');
   html += '</div>';
 
+  html += '<div id="topscorer-picks-container"></div>';
+
   container.innerHTML = html;
 
   loadAllTopScorerPicks().then(function(picks) {
-    if (picks.length === 0) return;
-    var picksDiv = document.createElement('div');
-    picksDiv.className = 'topscorer-picks';
-    var picksHtml = '<div class="topscorer-section-title">Que han puesto los demas</div>';
+    var picksContainer = document.getElementById('topscorer-picks-container');
+    if (!picksContainer || picks.length === 0) return;
+    var picksHtml = '<div class="topscorer-picks">';
+    picksHtml += '<div class="topscorer-section-title">Que han puesto los demas</div>';
     picksHtml += '<div class="topscorer-picks-list">';
     for (var i = 0; i < picks.length; i++) {
       var pick = picks[i];
@@ -287,9 +293,8 @@ function renderTopScorer() {
       picksHtml += '<span class="topscorer-pick-player">' + pFlag + ' ' + pick.player_name + goalsBadge + '</span>';
       picksHtml += '</div>';
     }
-    picksHtml += '</div>';
-    picksDiv.innerHTML = picksHtml;
-    container.appendChild(picksDiv);
+    picksHtml += '</div></div>';
+    picksContainer.innerHTML = picksHtml;
   });
 }
 
