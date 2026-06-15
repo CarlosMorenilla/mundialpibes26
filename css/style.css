@@ -1885,3 +1885,52 @@ body {
   margin-top: 12px;
   font-style: italic;
 }
+
+/* Top scorer picks from all users */
+.topscorer-picks {
+  margin-top: 24px;
+}
+
+.topscorer-picks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.topscorer-pick-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  gap: 10px;
+}
+
+.topscorer-pick-item.topscorer-pick-me {
+  border-color: var(--orange);
+  background: rgba(232, 98, 28, 0.05);
+}
+
+.topscorer-pick-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.topscorer-pick-player {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topscorer-pick-goals {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-left: 4px;
+}

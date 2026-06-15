@@ -193,6 +193,35 @@ function isTopScorerDeadlinePassed() {
   return new Date() > deadline;
 }
 
+function loadAllTopScorerPicks() {
+  if (!supabase) return Promise.resolve([]);
+  return Promise.all([
+    supabase.from('top_scorer_predictions').select('user_id, player_name, team_code'),
+    supabase.from('predictions').select('user_id, user_name')
+  ]).then(function(results) {
+    var picks = results[0].data || [];
+    var preds = results[1].data || [];
+    var nameMap = {};
+    for (var i = 0; i < preds.length; i++) {
+      if (preds[i].user_id && preds[i].user_name) {
+        nameMap[preds[i].user_id] = preds[i].user_name;
+      }
+    }
+    var out = [];
+    for (var j = 0; j < picks.length; j++) {
+      out.push({
+        user_id: picks[j].user_id,
+        user_name: nameMap[picks[j].user_id] || 'Jugador',
+        player_name: picks[j].player_name,
+        team_code: picks[j].team_code || ''
+      });
+    }
+    return out;
+  }).catch(function() {
+    return [];
+  });
+}
+
 function renderTopScorer() {
   var container = document.getElementById('topscorerContainer');
   if (!container) return;
@@ -236,6 +265,32 @@ function renderTopScorer() {
   html += '</div>';
 
   container.innerHTML = html;
+
+  loadAllTopScorerPicks().then(function(picks) {
+    if (picks.length === 0) return;
+    var picksDiv = document.createElement('div');
+    picksDiv.className = 'topscorer-picks';
+    var picksHtml = '<div class="topscorer-section-title">Que han puesto los demas</div>';
+    picksHtml += '<div class="topscorer-picks-list">';
+    for (var i = 0; i < picks.length; i++) {
+      var pick = picks[i];
+      var name = pick.user_name || 'Jugador';
+      var isMe = pick.user_id === currentUser.id;
+      var pFlag = pick.team_code ? getFlagImg(pick.team_code, 18) : '';
+      var goals = 0;
+      for (var j = 0; j < allPlayers.length; j++) {
+        if (allPlayers[j].name === pick.player_name) { goals = allPlayers[j].goals; break; }
+      }
+      var goalsBadge = goals > 0 ? ' <span class="topscorer-pick-goals">' + goals + ' ⚽</span>' : '';
+      picksHtml += '<div class="topscorer-pick-item' + (isMe ? ' topscorer-pick-me' : '') + '">';
+      picksHtml += '<span class="topscorer-pick-name">' + name + (isMe ? ' (tu)' : '') + '</span>';
+      picksHtml += '<span class="topscorer-pick-player">' + pFlag + ' ' + pick.player_name + goalsBadge + '</span>';
+      picksHtml += '</div>';
+    }
+    picksHtml += '</div>';
+    picksDiv.innerHTML = picksHtml;
+    container.appendChild(picksDiv);
+  });
 }
 
 function renderScorerLeaderboard(filter) {

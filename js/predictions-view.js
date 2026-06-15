@@ -1,6 +1,8 @@
 // MundialPibes26 - Ver predicciones de todos los usuarios
 
 var allPredictions = {};
+var predStageFilter = 'all';
+var predGroupFilter = 'all';
 
 function loadAllPredictions() {
   if (!supabase) return Promise.resolve();
@@ -20,13 +22,28 @@ function loadAllPredictions() {
     });
 }
 
+function filterPredStage(stage) {
+  predStageFilter = stage;
+  if (stage !== 'group' && stage !== 'all') {
+    predGroupFilter = 'all';
+  }
+  renderPredictionsView();
+}
+
+function filterPredGroup(group) {
+  predGroupFilter = group;
+  if (group === 'knockout') {
+    predStageFilter = 'all';
+  }
+  renderPredictionsView();
+}
+
 function renderPredictionsView() {
   var container = document.getElementById('predictionsContainer');
   if (!container || !matchesData) return;
 
   loadAllPredictions().then(function() {
     var html = '';
-    var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
     html += '<div class="predictions-legend">';
     html += '<span class="predictions-legend-item"><span class="predictions-legend-dot" style="background:var(--success);"></span>Acerto</span>';
@@ -34,15 +51,83 @@ function renderPredictionsView() {
     html += '<span class="predictions-legend-item"><span class="predictions-legend-dot" style="background:var(--text-light);"></span>Sin resultado</span>';
     html += '</div>';
 
-    for (var gi = 0; gi < groups.length; gi++) {
-      var g = groups[gi];
-      var groupMatches = getGroupMatches(g);
+    // Stage filter
+    html += '<div class="stage-filter">';
+    var stages = [
+      { key: 'all', label: 'Todos' },
+      { key: 'group', label: 'Grupos' },
+      { key: 'r32', label: 'R32' },
+      { key: 'r16', label: 'Octavos' },
+      { key: 'qf', label: 'Cuartos' },
+      { key: 'sf', label: 'Semi' },
+      { key: 'final', label: 'Final' }
+    ];
+    for (var si = 0; si < stages.length; si++) {
+      var s = stages[si];
+      html += '<button class="stage-filter-btn ' + (predStageFilter === s.key ? 'active' : '') + '" onclick="filterPredStage(\'' + s.key + '\')">' + s.label + '</button>';
+    }
+    html += '</div>';
 
-      html += '<div class="predictions-group">';
-      html += '<div class="predictions-group-title">Grupo ' + g + '</div>';
+    // Group filter (only when stage is group or all)
+    if (predStageFilter === 'group' || predStageFilter === 'all') {
+      html += '<div class="group-filter">';
+      html += '<button class="group-filter-btn ' + (predGroupFilter === 'all' ? 'active' : '') + '" onclick="filterPredGroup(\'all\')">Todos</button>';
 
-      for (var mi = 0; mi < groupMatches.length; mi++) {
-        var match = groupMatches[mi];
+      var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+      for (var gi = 0; gi < groups.length; gi++) {
+        html += '<button class="group-filter-btn ' + (predGroupFilter === groups[gi] ? 'active' : '') + '" onclick="filterPredGroup(\'' + groups[gi] + '\')">' + groups[gi] + '</button>';
+      }
+
+      if (predStageFilter === 'all') {
+        html += '<button class="group-filter-btn ' + (predGroupFilter === 'knockout' ? 'active' : '') + '" onclick="filterPredGroup(\'knockout\')">Elim.</button>';
+      }
+
+      html += '</div>';
+    }
+
+    // Filter matches
+    var matches = matchesData.matches;
+
+    if (predStageFilter !== 'all') {
+      matches = matches.filter(function(m) { return m.stage === predStageFilter; });
+    }
+
+    if (predGroupFilter !== 'all') {
+      if (predStageFilter === 'all' || predStageFilter === 'group') {
+        matches = matches.filter(function(m) { return m.group === predGroupFilter; });
+      }
+    }
+
+    if (predStageFilter === 'all' && predGroupFilter === 'knockout') {
+      matches = matchesData.matches.filter(function(m) { return m.stage !== 'group'; });
+    }
+
+    if (matches.length === 0) {
+      html += '<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">No hay partidos en esta vista</div></div>';
+      container.innerHTML = html;
+      return;
+    }
+
+    // Group by date for display
+    var grouped = {};
+    for (var mi = 0; mi < matches.length; mi++) {
+      var match = matches[mi];
+      var dateKey = match.date;
+      if (!grouped[dateKey]) grouped[dateKey] = [];
+      grouped[dateKey].push(match);
+    }
+
+    var sortedDates = Object.keys(grouped).sort();
+
+    for (var di = 0; di < sortedDates.length; di++) {
+      var date = sortedDates[di];
+      var dateObj = new Date(date + 'T12:00:00+01:00');
+      var dateLabel = dateObj.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Madrid' });
+      html += '<div class="day-header">' + dateLabel + '</div>';
+
+      var dayMatches = grouped[date];
+      for (var dj = 0; dj < dayMatches.length; dj++) {
+        var match = dayMatches[dj];
         var result = getResult(match.id);
         var preds = allPredictions[match.id] || [];
         var display = getMatchDisplay(match);
@@ -93,8 +178,6 @@ function renderPredictionsView() {
 
         html += '</div>';
       }
-
-      html += '</div>';
     }
 
     container.innerHTML = html;
