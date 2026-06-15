@@ -127,11 +127,16 @@ function parseScorerField(field, scorers) {
     var item = items[i].trim().replace(/[\u201C\u201D\u2018\u2019"']/g, '').trim();
     if (!item) continue;
     if (item.indexOf('(OG)') !== -1) continue;
-    var lastSpace = item.lastIndexOf(' ');
-    if (lastSpace === -1) continue;
-    var name = item.substring(0, lastSpace).trim();
-    var minute = item.substring(lastSpace + 1).trim();
-    if (name && minute) {
+    var minuteMatch = item.match(/(\d+['\+\d]*['\+]*)\s*(\(p\))?/);
+    var name;
+    if (minuteMatch) {
+      name = item.substring(0, minuteMatch.index).trim();
+    } else {
+      var lastSpace = item.lastIndexOf(' ');
+      if (lastSpace === -1) continue;
+      name = item.substring(0, lastSpace).trim();
+    }
+    if (name) {
       if (!scorers[name]) scorers[name] = 0;
       scorers[name]++;
     }
