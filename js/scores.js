@@ -54,17 +54,27 @@ function parseScorers(scorersStr) {
 
 function processAPIGames(games) {
   var changed = false;
+  var matched = 0;
+  var skipped = 0;
+  var unmatchedNames = [];
   for (var i = 0; i < games.length; i++) {
     var game = games[i];
     var homeCode = findTeamCodeByName(game.home_team_name_en);
     var awayCode = findTeamCodeByName(game.away_team_name_en);
-    if (!homeCode || !awayCode) continue;
+    if (!homeCode || !awayCode) {
+      skipped++;
+      if (!homeCode) unmatchedNames.push(game.home_team_name_en);
+      if (!awayCode) unmatchedNames.push(game.away_team_name_en);
+      continue;
+    }
 
     var match = findMatchByTeams(homeCode, awayCode);
-    if (!match) continue;
+    if (!match) { skipped++; continue; }
 
     var newStatus = mapStatus(game.time_elapsed, game.finished);
     if (newStatus !== 'live' && newStatus !== 'finished') continue;
+
+    matched++;
 
     var oldResult = matchResults[match.id];
     var oldStatus = oldResult ? oldResult.status : null;
@@ -103,24 +113,36 @@ function processAPIGames(games) {
     });
   } else {
     saveResults();
+    console.log('[Scores] Processed:', matched, 'matched,', skipped, 'skipped,', Object.keys(liveMatches).length, 'live');
+    if (unmatchedNames.length > 0) {
+      console.log('[Scores] Unmatched team names:', unmatchedNames);
+    }
     if (Object.keys(liveMatches).length > 0) {
       renderCurrentSection();
     }
   }
 }
 
+function stripDiacritics(str) {
+  return str.replace(/[\u00c0-\u024f]/g, function(ch) {
+    var map = {'\u00e7':'c','\u00e9':'e','\u00e1':'a','\u00e0':'a','\u00ed':'i','\u00f3':'o','\u00f1':'n','\u00fc':'u','\u00fa':'u','\u00e8':'e','\u00ea':'e','\u00eb':'e','\u00ef':'i','\u00f6':'o','\u00e4':'a'};
+    return map[ch] || ch;
+  });
+}
+
 function findTeamCodeByName(teamName) {
   if (!teamName || !matchesData) return null;
   var lower = teamName.toLowerCase();
+  var normal = stripDiacritics(lower);
   var teams = matchesData.teams;
   var codes = Object.keys(teams);
   for (var i = 0; i < codes.length; i++) {
     var code = codes[i];
     var name = teams[code].name.toLowerCase();
-    if (name === lower) return code;
+    if (name === lower || stripDiacritics(name) === normal) return code;
     var vars = getCodeVariations(code);
     for (var j = 0; j < vars.length; j++) {
-      if (lower.indexOf(vars[j]) !== -1) return code;
+      if (lower.indexOf(vars[j]) !== -1 || normal.indexOf(vars[j]) !== -1) return code;
     }
   }
   return null;
