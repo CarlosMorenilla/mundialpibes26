@@ -134,7 +134,7 @@ function getCodeVariations(code) {
     'MAR': ['morocco', 'marruecos'], 'HAI': ['haiti'], 'SCO': ['scotland', 'escocia'],
     'USA': ['united states', 'estados unidos', 'ee.uu.', 'usa'], 'PAR': ['paraguay'],
     'AUS': ['australia'], 'TUR': ['turkey', 'turquia', 'turkiye'], 'GER': ['germany', 'alemania'],
-    'CUW': ['curacao', 'curazao'], 'CIV': ['ivory coast', 'costa de marfil'],
+    'CUW': ['curacao', 'curazao', 'curaçao'], 'CIV': ['ivory coast', 'costa de marfil'],
     'ECU': ['ecuador'], 'NED': ['netherlands', 'paises bajos', 'holanda'],
     'JPN': ['japan', 'japon'], 'SWE': ['sweden', 'suecia'], 'TUN': ['tunisia', 'tunez'],
     'BEL': ['belgium', 'belgica'], 'EGY': ['egypt', 'egipto'], 'IRN': ['iran'],
