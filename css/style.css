@@ -292,6 +292,32 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.sections-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.sections-slider.sliding .section {
+  display: block !important;
+  opacity: 1;
+  transform: none;
+  animation: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.sections-slider.sliding .section.active {
+  position: relative;
+}
+
+.sections-slider.animating .section {
+  transition: transform 0.25s ease;
+}
+
 .section-title {
   font-size: 1.3rem;
   font-weight: 700;

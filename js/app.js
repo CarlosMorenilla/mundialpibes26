@@ -77,6 +77,11 @@ function switchSection(section) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function goToSection(section) {
+  if (section === currentSection) return;
+  slideToSection(section);
+}
+
 function renderCurrentSection() {
   if (currentSection === 'matches') {
     renderMatches();
@@ -220,34 +225,118 @@ function showToast(message, type) {
 
 document.addEventListener('DOMContentLoaded', initApp);
 
-// Swipe gestures to switch tabs
+// Swipe gestures - real-time sliding
 var swipeStartX = 0;
 var swipeStartY = 0;
-var swipeStartTime = 0;
-var swipeThreshold = 50;
-var swipeMaxTime = 500;
-
+var swipeDeltaX = 0;
+var swipeDragging = false;
+var swipeLocked = false;
 var tabOrder = ['matches', 'predictions', 'leaderboard', 'standings', 'bracket', 'topscorer'];
+
+function getSectionIndex(section) {
+  for (var i = 0; i < tabOrder.length; i++) {
+    if (tabOrder[i] === section) return i;
+  }
+  return -1;
+}
+
+function getSlider() {
+  return document.getElementById('sectionsSlider');
+}
+
+function setSliderOffset(offsetPx) {
+  var slider = getSlider();
+  if (!slider) return;
+  var sections = slider.querySelectorAll('.section');
+  var idx = getSectionIndex(currentSection);
+  for (var i = 0; i < sections.length; i++) {
+    var diff = i - idx;
+    sections[i].style.transform = 'translateX(' + (offsetPx + diff * 100) + '%)';
+  }
+}
 
 document.addEventListener('touchstart', function(e) {
   swipeStartX = e.touches[0].clientX;
   swipeStartY = e.touches[0].clientY;
-  swipeStartTime = Date.now();
+  swipeDeltaX = 0;
+  swipeDragging = false;
+  swipeLocked = false;
 }, { passive: true });
 
-document.addEventListener('touchend', function(e) {
-  var dx = e.changedTouches[0].clientX - swipeStartX;
-  var dy = e.changedTouches[0].clientY - swipeStartY;
-  var elapsed = Date.now() - swipeStartTime;
+document.addEventListener('touchmove', function(e) {
+  var dx = e.touches[0].clientX - swipeStartX;
+  var dy = e.touches[0].clientY - swipeStartY;
 
-  if (elapsed > swipeMaxTime) return;
-  if (Math.abs(dx) < swipeThreshold) return;
-  if (Math.abs(dy) > Math.abs(dx) * 1.2) return;
+  if (!swipeLocked && !swipeDragging) {
+    if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      swipeLocked = true;
+      swipeDragging = true;
+      var slider = getSlider();
+      if (slider) slider.classList.add('sliding');
+    } else if (Math.abs(dy) > 8) {
+      swipeLocked = false;
+      return;
+    }
+  }
 
-  var idx = tabOrder.indexOf(currentSection);
-  if (dx < 0 && idx < tabOrder.length - 1) {
-    switchSection(tabOrder[idx + 1]);
-  } else if (dx > 0 && idx > 0) {
-    switchSection(tabOrder[idx - 1]);
+  if (!swipeDragging) return;
+
+  swipeDeltaX = dx;
+  var pct = (dx / window.innerWidth) * 100;
+  var idx = getSectionIndex(currentSection);
+  if ((idx === 0 && dx > 0) || (idx === tabOrder.length - 1 && dx < 0)) {
+    pct = pct * 0.3;
+  }
+  setSliderOffset(pct);
+}, { passive: true });
+
+document.addEventListener('touchend', function() {
+  if (!swipeDragging) return;
+  swipeDragging = false;
+
+  var slider = getSlider();
+  if (slider) slider.classList.remove('sliding');
+
+  var idx = getSectionIndex(currentSection);
+  var pct = (swipeDeltaX / window.innerWidth) * 100;
+
+  if (pct < -15 && idx < tabOrder.length - 1) {
+    slideToSection(tabOrder[idx + 1]);
+  } else if (pct > 15 && idx > 0) {
+    slideToSection(tabOrder[idx - 1]);
+  } else {
+    slideToSection(currentSection);
   }
 }, { passive: true });
+
+function slideToSection(section) {
+  var slider = getSlider();
+  if (!slider) { switchSection(section); return; }
+
+  var targetIdx = getSectionIndex(section);
+  var currentIdx = getSectionIndex(currentSection);
+  var diff = targetIdx - currentIdx;
+
+  if (diff === 0) {
+    setSliderOffset(0);
+    return;
+  }
+
+  slider.classList.add('animating');
+  var sections = slider.querySelectorAll('.section');
+  for (var i = 0; i < sections.length; i++) {
+    var sdiff = i - currentIdx;
+    sections[i].style.transform = 'translateX(' + ((diff - sdiff) * -100 + (diff * 100)) + '%)';
+  }
+  setSliderOffset(-diff * 100);
+
+  setTimeout(function() {
+    slider.classList.remove('animating', 'sliding');
+    var allSections = slider.querySelectorAll('.section');
+    for (var j = 0; j < allSections.length; j++) {
+      allSections[j].style.transform = '';
+      allSections[j].style.position = '';
+    }
+    switchSection(section);
+  }, 260);
+}
