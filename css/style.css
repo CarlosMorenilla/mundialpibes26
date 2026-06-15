@@ -1291,6 +1291,55 @@ body {
   color: var(--success);
 }
 
+.standing-row.standing-qualified-third {
+  background: rgba(46, 204, 113, 0.06);
+  border-left: 3px solid var(--success);
+}
+
+.standing-qualified-third .standing-pos {
+  color: var(--success);
+}
+
+.standing-row.standing-eliminated-third {
+  opacity: 0.5;
+}
+
+.standing-third-badge {
+  font-size: 0.55rem;
+  color: var(--success);
+  margin-left: 2px;
+  font-weight: 700;
+}
+
+.standing-third-group {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  margin-left: 2px;
+}
+
+/* Best thirds ranking */
+.standing-thirds {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.standing-thirds-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.standing-thirds-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .standing-team {
   flex: 1;
   display: flex;

@@ -87,11 +87,43 @@ function calculateGroupStandings() {
   return standings;
 }
 
+function calculateBestThirdTeams(standings) {
+  var thirds = [];
+  var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+
+  for (var gi = 0; gi < groups.length; gi++) {
+    var g = groups[gi];
+    var rows = standings[g];
+    if (!rows || rows.length < 3) continue;
+    var third = rows[2];
+    third.group = g;
+    thirds.push(third);
+  }
+
+  thirds.sort(function(a, b) {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
+    if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+    return a.name.localeCompare(b.name);
+  });
+
+  var qualified = {};
+  for (var i = 0; i < thirds.length; i++) {
+    thirds[i].thirdPosition = i + 1;
+    if (i < 8) {
+      qualified[thirds[i].code] = true;
+    }
+  }
+
+  return { thirds: thirds, qualified: qualified };
+}
+
 function renderStandings() {
   var container = document.getElementById('standingsContainer');
   if (!container || !matchesData) return;
 
   var standings = calculateGroupStandings();
+  var thirdInfo = calculateBestThirdTeams(standings);
   var groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
   var html = '';
@@ -127,9 +159,14 @@ function renderStandings() {
       var row = rows[ri];
       var posClass = '';
       if (row.position <= 2) posClass = 'standing-qualified';
+      else if (row.position === 3 && thirdInfo.qualified[row.code]) posClass = 'standing-qualified-third';
 
       html += '<div class="standing-row ' + posClass + '">';
-      html += '<div class="standing-col standing-pos">' + row.position + '</div>';
+      html += '<div class="standing-col standing-pos">' + row.position;
+      if (row.position === 3 && thirdInfo.qualified[row.code]) {
+        html += '<span class="standing-third-badge" title="Mejor tercero clasificado">&#10003;</span>';
+      }
+      html += '</div>';
       html += '<div class="standing-col standing-team">';
       html += getFlagImg(row.code, 20) + ' ';
       html += '<span>' + row.name + '</span>';
@@ -147,6 +184,41 @@ function renderStandings() {
 
     html += '</div></div>';
   }
+
+  // Render best thirds ranking
+  html += '<div class="standing-thirds">';
+  html += '<div class="standing-thirds-title">Ranking de terceros (8 mejores clasifican)</div>';
+  html += '<div class="standing-thirds-table">';
+  html += '<div class="standing-row standing-header">';
+  html += '<div class="standing-col standing-pos">#</div>';
+  html += '<div class="standing-col standing-team">Equipo</div>';
+  html += '<div class="standing-col standing-stat">Pts</div>';
+  html += '<div class="standing-col standing-stat standing-dg">DG</div>';
+  html += '<div class="standing-col standing-stat">GF</div>';
+  html += '</div>';
+
+  for (var ti = 0; ti < thirdInfo.thirds.length; ti++) {
+    var t = thirdInfo.thirds[ti];
+    var tClass = ti < 8 ? 'standing-qualified-third' : 'standing-eliminated-third';
+
+    html += '<div class="standing-row ' + tClass + '">';
+    html += '<div class="standing-col standing-pos">' + t.thirdPosition;
+    if (ti < 8) {
+      html += '<span class="standing-third-badge" title="Clasificado">&#10003;</span>';
+    }
+    html += '</div>';
+    html += '<div class="standing-col standing-team">';
+    html += getFlagImg(t.code, 20) + ' ';
+    html += '<span>' + t.name + '</span>';
+    html += ' <span class="standing-third-group">Grupo ' + t.group + '</span>';
+    html += '</div>';
+    html += '<div class="standing-col standing-stat">' + t.points + '</div>';
+    html += '<div class="standing-col standing-stat standing-dg">' + (t.goalDiff >= 0 ? '+' : '') + t.goalDiff + '</div>';
+    html += '<div class="standing-col standing-stat">' + t.goalsFor + '</div>';
+    html += '</div>';
+  }
+
+  html += '</div></div>';
 
   container.innerHTML = html;
 }
