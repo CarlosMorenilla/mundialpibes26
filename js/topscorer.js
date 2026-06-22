@@ -233,6 +233,14 @@ function renderTopScorer() {
   var deadlinePassed = isTopScorerDeadlinePassed();
   var html = '';
 
+  html += '<div class="topscorer-search">';
+  html += '<div class="topscorer-search-row">';
+  html += '<span class="topscorer-search-icon">🔍</span>';
+  html += '<input type="text" id="topscorer-input" placeholder="Buscar jugador para ver goles..." autocomplete="off" oninput="filterScorers()">';
+  html += '</div>';
+  html += '<div id="topscorer-results" class="topscorer-results" style="display:none;"></div>';
+  html += '</div>';
+
   if (myTopScorer) {
     var flag = myTopScorer.team ? getFlagImg(myTopScorer.team, 28) : '';
     html += '<div class="topscorer-current">';
@@ -252,14 +260,6 @@ function renderTopScorer() {
     html += '<div class="topscorer-deadline-icon">🔒</div>';
     html += '<div class="topscorer-deadline-text">Plazo finalizado</div>';
     html += '<div class="topscorer-deadline-sub">No se pueden hacer predicciones de maximo goleador. El plazo era hasta el martes 16 de junio a las 23:59.</div>';
-    html += '</div>';
-  } else {
-    html += '<div class="topscorer-search">';
-    html += '<div class="topscorer-search-row">';
-    html += '<span class="topscorer-search-icon">🔍</span>';
-    html += '<input type="text" id="topscorer-input" placeholder="Buscar jugador..." autocomplete="off" oninput="filterScorers()">';
-    html += '</div>';
-    html += '<div id="topscorer-results" class="topscorer-results" style="display:none;"></div>';
     html += '</div>';
   }
 
@@ -379,12 +379,15 @@ function filterScorers() {
 }
 
 function selectFromSearch(name, team) {
-  if (myTopScorer || isTopScorerDeadlinePassed()) return;
   var input = document.getElementById('topscorer-input');
   var resultsDiv = document.getElementById('topscorer-results');
-  if (input) input.value = '';
+  if (input) input.value = name;
   if (resultsDiv) resultsDiv.style.display = 'none';
-  confirmTopScorer(name, team);
+  var listDiv = document.getElementById('topscorer-list');
+  if (listDiv) listDiv.innerHTML = renderScorerLeaderboard(name);
+  if (!myTopScorer && !isTopScorerDeadlinePassed()) {
+    confirmTopScorer(name, team);
+  }
 }
 
 function quickSelectScorer(name, team) {
