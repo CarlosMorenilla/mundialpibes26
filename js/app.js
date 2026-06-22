@@ -129,6 +129,13 @@ function renderMatches() {
     grouped[dateKey].push(match);
   });
 
+  var sortedDates = Object.keys(grouped).sort();
+  for (var d = 0; d < sortedDates.length; d++) {
+    grouped[sortedDates[d]].sort(function(a, b) {
+      return a.time.localeCompare(b.time);
+    });
+  }
+
   var html = '';
 
   // Filtro de fase

@@ -79,13 +79,23 @@ function processAPIGames(games) {
     var oldResult = matchResults[match.id];
     var oldStatus = oldResult ? oldResult.status : null;
 
-    var homeScorers = parseScorers(game.home_scorers);
-    var awayScorers = parseScorers(game.away_scorers);
+    var homeScorers, awayScorers, homeScore, awayScore;
+    if (homeCode === match.home) {
+      homeScore = parseInt(game.home_score) || 0;
+      awayScore = parseInt(game.away_score) || 0;
+      homeScorers = parseScorers(game.home_scorers);
+      awayScorers = parseScorers(game.away_scorers);
+    } else {
+      homeScore = parseInt(game.away_score) || 0;
+      awayScore = parseInt(game.home_score) || 0;
+      homeScorers = parseScorers(game.away_scorers);
+      awayScorers = parseScorers(game.home_scorers);
+    }
 
     var result = {
       match_id: match.id,
-      home_score: parseInt(game.home_score) || 0,
-      away_score: parseInt(game.away_score) || 0,
+      home_score: homeScore,
+      away_score: awayScore,
       status: newStatus,
       minute: game.time_elapsed || null,
       home_scorers: homeScorers,
