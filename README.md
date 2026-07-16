@@ -1,6 +1,7 @@
-# MundialPibes26
+# Mundial26
 
 Predicciones del Mundial 2026. App web mobile-first para predecir resultados del Mundial y competir con amigos.
+Link a la pagina web: https://mundial2026pibes.netlify.app/index.html
 
 ## Funcionalidades
 
